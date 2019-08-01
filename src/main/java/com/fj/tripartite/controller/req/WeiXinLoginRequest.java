@@ -14,6 +14,6 @@ import lombok.Data;
 @ApiModel(value = "CLIENT-微信快捷登录请求对象")
 public class WeiXinLoginRequest {
 
-    @ApiModelProperty(value = "CODE,程序在调用微信App登录成功之后，由微信返回", required = true, example = "ASFASGASAS")
-    String code;
+    @ApiModelProperty(value = "微信登录CODE,当前App程序在调用微信App登录成功之后，由微信返回", required = true, example = "ASFASGASAS")
+    private String code;
 }

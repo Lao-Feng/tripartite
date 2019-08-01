@@ -28,7 +28,7 @@ public class LoginController {
     @ApiParam(name = "req", required = true)
     @ApiResponse(code = 200, message = "OK", response = WeiXinLoginResponse.class)
     @PostMapping("v1/login/weixin")
-    WeiXinLoginResponse weixin(@RequestBody @Valid WeiXinLoginRequest req) {
+    public WeiXinLoginResponse weixinLogin(@RequestBody @Valid WeiXinLoginRequest req) {
         return null;
     }
 
