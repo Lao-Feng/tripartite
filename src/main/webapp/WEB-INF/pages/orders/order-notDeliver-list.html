@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>待发货订单管理</title>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/brand.css" rel="stylesheet" type="text/css">
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+<div class="mould-main">
+    <div class="mould-top">
+        <p>待发货订单管理</p>
+    </div>
+    <div class="mould-middle">
+        <div class="mould-content">
+            <div class="mould-search">
+                <div class="mould-items">
+                    <div class="mould-item">
+                        <div class="item-text">订单编号</div>
+                        <div class="item-input">
+                            <input type="text" id="orderCode"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="mould-btn">
+                <div class="btn-item btn-query">查询</div>
+                <div class="btn-item btn-delivered">已发货</div>
+            </div>
+            <table id="table" class="table_style" style="margin: 0 auto"></table>
+        </div>
+    </div>
+    <div class="mould-bottom">
+        <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+    </div>
+</div>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script src="../../../js/order.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //查询
+        $(".btn-query").on("click",function () {
+            $("#table").bootstrapTable('refresh');
+        });
+        //已发货
+        $(".btn-delivered").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var orderCode = selections[0].orderCode;
+                layer.confirm('商品已邮寄给买家?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url: '/order/progress/change.shtm',
+                        type: 'post',
+                        data: {orderCode:orderCode,status:"7"},
+                        dataType: "json",
+                        success:function (result) {
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        //加载待发货订单列表
+        loadOrderList("6");
+    });
+</script>
+</body>
+</html>

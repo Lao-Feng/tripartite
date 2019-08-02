@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<head>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/tail.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/jquery-ui.css" rel="stylesheet" />
+    <link href="../../../plugin/ueditor/themes/default/css/ueditor.css"/>
+    <style>
+        .gallery .img-item{
+            position: relative;
+        }
+        .gallery .img-item .delete{
+            position: absolute;
+            display: block;
+            width: 20px;
+            height:20px;
+            color: #fff;
+            background: rgba(0,0,0,0.7);
+            line-height: 20px;
+            text-align: center;
+            border-radius: 50%;
+            top: 2px;
+            right: 1px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="content">
+        <div class="tail-main" style="display: block">
+            <form id="helpForm" target="submitFrame">
+                <input type="hidden" name="id">
+                <div class="top table2_top">
+                    <div class="top_out">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td>类型<span></span></td>
+                                <td>
+                                    <select name="type">
+                                        <option value="1">用户条款</option>
+                                        <option value="2">隐私政策</option>
+                                        <option value="3">常见问题</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>标题<span>*</span></td>
+                                <td>
+                                    <input type="text" name="title">
+                                </td>
+                                <td>关键字<span></span></td>
+                                <td>
+                                    <input type="text" name="introduction">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>作者<span>*</span></td>
+                                <td>
+                                    <input type="text" name="author">
+                                </td>
+                                <td>状态<span></span></td>
+                                <td>
+                                    <select name="status">
+                                        <option value="待发布">待发布</option>
+                                        <option value="已发布">已发布</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-10">
+                        <script type="text/plain" id="editor" class="dNote"></script>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="notice_bot">
+    <div class="l_left"><input type="checkbox"/>保存并关闭窗口</div>
+    <div class="r_right but_p">
+        <button class="but_save">完成</button>
+        <button class="but_close">关闭</button>
+    </div>
+</div>
+<iframe id="submitFrame" style="display: none;width:0; height:0" name="submitFrame"  src="about:blank"></iframe>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/ueditor/ueditor.config.js"></script>
+<script src="../../../plugin/ueditor/ueditor.all.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script src="../../../plugin/laydate/laydate.js"></script>
+<script type="text/javascript">
+    var files=[];
+    $(function () {
+        initUEditor();//初始化UEditor
+        //保存
+        $(".but_save").on("click",function () {
+            var content = ue.getContent();
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/sys/news/addOrUpdate.shtm",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data: {
+                    title:$("input[name='title']").val(),
+                    type:$("select[name='type']").find("option:selected").val(),
+                    introduction:$("input[name='introduction']").val(),
+                    status:$("select[name='status']").find("option:selected").val(),
+                    author:$("input[name='author']").val(),
+                    xxxx:content
+                },
+                success: function (result) {
+                    var msg = result.msg;
+                    parent.layer.msg(msg);
+                    $("input[name='id']").val(result.id);
+                    var table = $(parent.$(".log_active")[0]).attr("table");
+                    parent.$("#"+table).bootstrapTable('refresh');
+                    if($(".notice_bot").find("input[type='checkbox']")[0].checked){
+                        $(".but_close").click();
+                    }
+                }
+            });
+        });
+        //关闭按钮
+        $(".but_close").on("click",function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+
+    function initUEditor(content){
+        ue = UE.getEditor('editor');
+        ue.addListener("ready", function () {
+            ue.setHeight(300);
+            if(content!=undefined){
+                ue.setContent(content);
+            }
+        });
+    }
+</script>
+</body>
+</html>

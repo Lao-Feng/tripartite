@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.SysLogMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.SysLog">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="user" jdbcType="VARCHAR" property="user" />
+    <result column="organization" jdbcType="VARCHAR" property="organization" />
+    <result column="operation" jdbcType="VARCHAR" property="operation" />
+    <result column="interface_name" jdbcType="VARCHAR" property="interface_name" />
+    <result column="params" jdbcType="VARCHAR" property="params" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="browser" jdbcType="VARCHAR" property="browser" />
+    <result column="server_ip" jdbcType="VARCHAR" property="server_ip" />
+    <result column="client_ip" jdbcType="VARCHAR" property="client_ip" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="exception" jdbcType="VARCHAR" property="exception" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="create_time" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, type, user, organization, operation, interface_name, params, method, browser, 
+    server_ip, client_ip, result, exception, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.SysLogExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from sys_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sys_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.SysLogExample">
+    delete from sys_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.SysLog">
+    insert into sys_log (id, type, user, 
+      organization, operation, interface_name, 
+      params, method, browser, 
+      server_ip, client_ip, result, 
+      exception, create_time)
+    values (#{id,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, #{user,jdbcType=VARCHAR}, 
+      #{organization,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}, #{interface_name,jdbcType=VARCHAR}, 
+      #{params,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{browser,jdbcType=VARCHAR}, 
+      #{server_ip,jdbcType=VARCHAR}, #{client_ip,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR}, 
+      #{exception,jdbcType=VARCHAR}, #{create_time,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.SysLog">
+    <selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into sys_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="user != null">
+        user,
+      </if>
+      <if test="organization != null">
+        organization,
+      </if>
+      <if test="operation != null">
+        operation,
+      </if>
+      <if test="interface_name != null">
+        interface_name,
+      </if>
+      <if test="params != null">
+        params,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="browser != null">
+        browser,
+      </if>
+      <if test="server_ip != null">
+        server_ip,
+      </if>
+      <if test="client_ip != null">
+        client_ip,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="exception != null">
+        exception,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="user != null">
+        #{user,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null">
+        #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="interface_name != null">
+        #{interface_name,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="browser != null">
+        #{browser,jdbcType=VARCHAR},
+      </if>
+      <if test="server_ip != null">
+        #{server_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="client_ip != null">
+        #{client_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="exception != null">
+        #{exception,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{create_time,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.SysLogExample" resultType="java.lang.Long">
+    select count(*) from sys_log
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update sys_log
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=TINYINT},
+      </if>
+      <if test="record.user != null">
+        user = #{record.user,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organization != null">
+        organization = #{record.organization,jdbcType=VARCHAR},
+      </if>
+      <if test="record.operation != null">
+        operation = #{record.operation,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interface_name != null">
+        interface_name = #{record.interface_name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.params != null">
+        params = #{record.params,jdbcType=VARCHAR},
+      </if>
+      <if test="record.method != null">
+        method = #{record.method,jdbcType=VARCHAR},
+      </if>
+      <if test="record.browser != null">
+        browser = #{record.browser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.server_ip != null">
+        server_ip = #{record.server_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.client_ip != null">
+        client_ip = #{record.client_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="record.result != null">
+        result = #{record.result,jdbcType=VARCHAR},
+      </if>
+      <if test="record.exception != null">
+        exception = #{record.exception,jdbcType=VARCHAR},
+      </if>
+      <if test="record.create_time != null">
+        create_time = #{record.create_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update sys_log
+    set id = #{record.id,jdbcType=BIGINT},
+      type = #{record.type,jdbcType=TINYINT},
+      user = #{record.user,jdbcType=VARCHAR},
+      organization = #{record.organization,jdbcType=VARCHAR},
+      operation = #{record.operation,jdbcType=VARCHAR},
+      interface_name = #{record.interface_name,jdbcType=VARCHAR},
+      params = #{record.params,jdbcType=VARCHAR},
+      method = #{record.method,jdbcType=VARCHAR},
+      browser = #{record.browser,jdbcType=VARCHAR},
+      server_ip = #{record.server_ip,jdbcType=VARCHAR},
+      client_ip = #{record.client_ip,jdbcType=VARCHAR},
+      result = #{record.result,jdbcType=VARCHAR},
+      exception = #{record.exception,jdbcType=VARCHAR},
+      create_time = #{record.create_time,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.SysLog">
+    update sys_log
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="user != null">
+        user = #{user,jdbcType=VARCHAR},
+      </if>
+      <if test="organization != null">
+        organization = #{organization,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        operation = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="interface_name != null">
+        interface_name = #{interface_name,jdbcType=VARCHAR},
+      </if>
+      <if test="params != null">
+        params = #{params,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="browser != null">
+        browser = #{browser,jdbcType=VARCHAR},
+      </if>
+      <if test="server_ip != null">
+        server_ip = #{server_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="client_ip != null">
+        client_ip = #{client_ip,jdbcType=VARCHAR},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="exception != null">
+        exception = #{exception,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        create_time = #{create_time,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.SysLog">
+    update sys_log
+    set type = #{type,jdbcType=TINYINT},
+      user = #{user,jdbcType=VARCHAR},
+      organization = #{organization,jdbcType=VARCHAR},
+      operation = #{operation,jdbcType=VARCHAR},
+      interface_name = #{interface_name,jdbcType=VARCHAR},
+      params = #{params,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      browser = #{browser,jdbcType=VARCHAR},
+      server_ip = #{server_ip,jdbcType=VARCHAR},
+      client_ip = #{client_ip,jdbcType=VARCHAR},
+      result = #{result,jdbcType=VARCHAR},
+      exception = #{exception,jdbcType=VARCHAR},
+      create_time = #{create_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

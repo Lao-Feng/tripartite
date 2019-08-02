@@ -1,0 +1,7 @@
+﻿<html>
+<head></head>
+<body>
+    <h1>您好!你在Alleyoop的账号注册成功,请点击链接进行激活</h1>
+    <h3><a th:text="${activeUrl}" th:attr="href=@{${activeUrl}}"></a></h3>
+</body>
+</html>

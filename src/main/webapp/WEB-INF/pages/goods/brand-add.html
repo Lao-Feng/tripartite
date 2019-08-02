@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <head>
+        <link href="../../../css/tree.css" rel="stylesheet" type="text/css">
+        <style>
+            .btn {
+                border-radius: 0px;
+                font-weight: 100;
+                cursor: pointer;
+                display: inline-block;
+                padding: 5px;
+                font-size: 14px;
+                font-family: '微软雅黑'
+            }
+            .btn-primary {
+                color: #fff;
+                text-shadow: 0 1px rgba(0,0,0,.1);
+                background-image: -webkit-linear-gradient(top,#4d90fe 0,#4787ed 100%);
+                background-image: -o-linear-gradient(top,#4d90fe 0,#4787ed 100%);
+                background-image: -webkit-gradient(linear,left top,left bottom,from(#4d90fe),to(#4787ed));
+                background-image: linear-gradient(to bottom,#4d90fe 0,#4787ed 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d90fe', endColorstr='#ff4787ed', GradientType=0);
+                filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+                background-repeat: repeat-x;
+                border: 1px solid #3079ed;
+            }
+            .btn-success {
+                color: #fff;
+                text-shadow: 0 1px rgba(0,0,0,.1);
+                background-image: -webkit-linear-gradient(top,#35aa47 0,#35aa47 100%);
+                background-image: -o-linear-gradient(top,#35aa47 0,#35aa47 100%);
+                background-image: -webkit-gradient(linear,left top,left bottom,from(#35aa47),to(#35aa47));
+                background-image: linear-gradient(to bottom,#35aa47 0,#35aa47 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff35aa47', endColorstr='#ff35aa47', GradientType=0);
+                filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+                background-repeat: repeat-x;
+                border: 1px solid #359947;
+            }
+            .gallery .img-item{
+                position: relative;
+            }
+            .gallery .img-item .delete{
+                position: absolute;
+                display: block;
+                width: 20px;
+                height:20px;
+                color: #fff;
+                background: rgba(0,0,0,0.7);
+                line-height: 20px;
+                text-align: center;
+                border-radius: 50%;
+                top: 2px;
+                right: 1px;
+                cursor: pointer;
+            }
+            .img {
+                width: 59px;
+                height: 59px;
+                border: 5px solid #cccccc;
+            }
+            .img.active{
+                border-color: #f99277;
+            }
+        </style>
+    </head>
+<body>
+    <form id="brandForm" target="submitFrame">
+        <input type="hidden" name="brandCode">
+        <div class="div_form">
+            <div>
+                <label class="form_label">商品类别<span>*</span></label>
+                <select class="form_input" name="categoryCode"></select>
+            </div>
+            <div>
+                <label class="form_label">品牌名称<span>*</span></label>
+                <input type="text" class="form_input" name="brandName">
+            </div>
+            <div>
+                <div id="upload" class="btn btn-primary">选择图片</div>
+                <div class="btn btn-success" id="uploadImg" style="display: none;">上传</div>
+                <input id="file" type="file" multiple style="display:none">
+                <div class="gallery" id="gallery" style="margin-top: 14px;"></div>
+            </div>
+        </div>
+        <div style="clear: both"></div>
+        <div class="notice_bot">
+            <div class="l_left"><input type="checkbox" checked="checked"/>保存并关闭窗口</div>
+            <div class="r_right but_p">
+                <button class="but_save">保存</button>
+                <button class="but_close">关闭</button>
+            </div>
+        </div>
+    </form>
+    <iframe id="submitFrame" style="display: none;width:0; height:0" name="submitFrame"  src="about:blank"></iframe>
+</body>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script>
+    var files=[];
+    $(function () {
+        loadCategoryList();
+
+        //选择图片
+        $("#upload").click(function(){
+            $("#file").trigger("click");
+        });
+        $("#file").change(function(){
+            //document.getElementById("gallery").innerHTML="";
+            var img=document.getElementById("file").files;
+            for(var i=0;i<img.length;i++){
+                var file=img[i]; var url=URL.createObjectURL(file);
+                var box=document.createElement("img");
+                box.setAttribute("src",url);
+                box.className='img';
+
+                var imgBox=document.createElement("div");
+                imgBox.style.display='inline-block';imgBox.style.cursor='pointer';
+                imgBox.className='img-item';
+
+                var deleteIcon = document.createElement("span");
+                deleteIcon.className = 'delete';
+                deleteIcon.innerText = 'x';
+                deleteIcon.dataset.filename = img[i].name;
+                imgBox.appendChild(deleteIcon);
+
+                imgBox.appendChild(box);
+                var body=document.getElementsByClassName("gallery")[0];
+                body.appendChild(imgBox);
+                files.push(file);
+                $(deleteIcon).click(function () {
+                    var filename = $(this).data("filename");
+                    $(this).parent().remove();
+                    for(var j=0;j<files.length;j++){
+                        if(files[j].name = filename){
+                            files.splice(j,1);
+                            break;
+                        }
+                    }
+                });
+
+                $(imgBox).click(function () {
+                    $("#gallery").find("img").each(function (index) {
+                        $(this).attr("class","img");
+                    });
+                    $(this).find("img").attr("class","img active");
+                });
+            }
+        });
+        //上传
+        $("#uploadImg").click(function(){
+            var brandCode = $("input[name='brandCode']").val();
+            if(brandCode==undefined||brandCode==""){
+                layer.msg("请先保存品牌信息");
+                return;
+            }
+            var uploadFile = new FormData();
+            uploadFile.append('brandCode',$("input[name='brandCode']").val());
+            for(var i=0;i<files.length;i++){
+                uploadFile.append('imgs',files[i]);
+            }
+            if(files.length > 0){
+                $.ajax({
+                    url:'/commodity/brand/picture/upload.shtm',
+                    type:'POST',
+                    data:uploadFile,
+                    async: false,
+                    cache: false,
+                    contentType: false, //不设置内容类型
+                    processData: false, //不处理数据
+                    success:function(result){
+                        layer.msg(result.msg);
+                        if(result.code==200){
+                            files = [];
+                            var brand = result.brand;
+                            $("#gallery").find(".img-item").each(function (index) {
+                                $(this).remove();
+                            });
+                            for(var i=0;i<brand.picArray.length;i++){
+                                var pic = brand.picArray[i];
+                                var box=document.createElement("img");
+                                box.setAttribute("src",result.http+pic);
+                                box.className='img';
+
+                                var imgBox=document.createElement("div");
+                                imgBox.style.display='inline-block';imgBox.style.cursor='pointer';
+                                imgBox.className='img-item';
+
+                                var deleteIcon = document.createElement("span");
+                                deleteIcon.className = 'delete';
+                                deleteIcon.innerText = 'x';
+                                deleteIcon.dataset.filename = pic;
+                                imgBox.appendChild(deleteIcon);
+
+                                imgBox.appendChild(box);
+                                var body=document.getElementsByClassName("gallery")[0];
+                                body.appendChild(imgBox);
+                                $(deleteIcon).click(function () {
+                                    $(this).parent().remove();
+                                    var picture = $(this).data("filename");
+                                    $.ajax({
+                                        type: "post",
+                                        dataType: "json",
+                                        data:{
+                                            brandCode:$("input[name='brandCode']").val(),
+                                            picture:picture
+                                        },
+                                        url:'/commodity/brand/picture/delete.shtm',
+                                        success: function (result) {
+                                        }
+                                    });
+                                });
+                                $(imgBox).click(function () {
+                                    $("#gallery").find("img").each(function (index) {
+                                        $(this).attr("class","img");
+                                    });
+                                    $(this).find("img").attr("class","img active");
+                                });
+                            }
+                        }
+                    }
+                })
+            }else {
+                layer.msg("请先选择需要上传的图片");
+            }
+        });
+
+        //保存
+        $(".but_save").on("click",function () {
+            var uploadFile = new FormData();
+            uploadFile.append('brandCode',$("input[name='brandCode']").val());
+            for(var i=0;i<files.length;i++){
+                uploadFile.append('imgs',files[i]);
+            }
+            //获取表单数据，并序列化
+            var formData = $("#brandForm").serializeArray();
+            //将序列化数据转为对象
+            for (var item in formData) {
+                uploadFile.append(formData[item].name,formData[item].value);
+            }
+            $.ajax({
+                type: "POST",
+                url: "/dic/brand/addOrUpdate.shtm",
+                data:uploadFile,
+                async: false,
+                cache: false,
+                contentType: false, //不设置内容类型
+                processData: false, //不处理数据
+                success: function (result) {
+                    parent.layer.msg(result.msg);
+                    if(result.code==200){
+                        $("input[name='brandCode']").val(result.brand.brandCode);
+                        parent.$("#table").bootstrapTable('refresh');
+                        if($(".notice_bot").find("input[type='checkbox']")[0].checked){
+                            $(".but_close").click();
+                        }
+                    }
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////
+                    if(result.code==200){
+                        files = [];
+                        var brand = result.brand;
+                        $("#gallery").find(".img-item").each(function (index) {
+                            $(this).remove();
+                        });
+                        for(var i=0;i<brand.picArray.length;i++){
+                            var pic = brand.picArray[i];
+                            var box=document.createElement("img");
+                            box.setAttribute("src",result.http+pic);
+                            box.className='img';
+
+                            var imgBox=document.createElement("div");
+                            imgBox.style.display='inline-block';imgBox.style.cursor='pointer';
+                            imgBox.className='img-item';
+
+                            var deleteIcon = document.createElement("span");
+                            deleteIcon.className = 'delete';
+                            deleteIcon.innerText = 'x';
+                            deleteIcon.dataset.filename = pic;
+                            imgBox.appendChild(deleteIcon);
+
+                            imgBox.appendChild(box);
+                            var body=document.getElementsByClassName("gallery")[0];
+                            body.appendChild(imgBox);
+                            $(deleteIcon).click(function () {
+                                layer.confirm('是否确定删除?', {
+                                    title: '提示',
+                                    btn: ['确定', '取消'] //按钮
+                                }, function (index) {
+                                    $(this).parent().remove();
+                                    var picture = $(this).data("filename");
+                                    $.ajax({
+                                        type: "post",
+                                        dataType: "json",
+                                        data:{
+                                            brandCode:$("input[name='brandCode']").val(),
+                                            picture:picture
+                                        },
+                                        url:'/commodity/brand/picture/delete.shtm',
+                                        success: function (result) {
+                                            layer.msg(result.msg);
+                                        }
+                                    });
+                                }, function (index) {
+                                    layer.close(index);
+                                });
+                            });
+                            $(imgBox).click(function () {
+                                $("#gallery").find("img").each(function (index) {
+                                    $(this).attr("class","img");
+                                });
+                                $(this).find("img").attr("class","img active");
+                            });
+                        }
+                    }
+                }
+            });
+
+            /*
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/dic/brand/addOrUpdate.shtm",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data: $("#brandForm").serialize(),
+                success: function (result) {
+                    parent.layer.msg(result.msg);
+                    if(result.code==200){
+                        $("input[name='brandCode']").val(result.brand.brandCode);
+                        parent.$("#table").bootstrapTable('refresh');
+                        if($(".notice_bot").find("input[type='checkbox']")[0].checked){
+                            $(".but_close").click();
+                        }
+                    }
+                }
+            });
+            */
+        });
+        //关闭按钮
+        $(".but_close").on("click",function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+
+    /**
+     * 加载商品类别
+     */
+    function loadCategoryList(){
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "/dic/getCategoryList.shtm",
+            success: function (list) {
+                $.each(list, function (i) {
+                    var obj = list[i];
+                    var opt = '<option value="'+obj.categoryCode+'">'+obj.categoryName+'</option>';
+                    $("select[name='categoryCode']").append(opt);
+                });
+            }
+        });
+    }
+</script>
+</html>

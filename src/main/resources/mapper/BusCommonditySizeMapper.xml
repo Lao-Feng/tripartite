@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusCommonditySizeMapper">
+  <!-- 使用ehcache二级缓存 -->
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusCommonditySize">
+    <id column="SizeCode" jdbcType="INTEGER" property="sizeCode" />
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="SizeType" jdbcType="VARCHAR" property="sizeType" />
+    <result column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="LowestAsk" jdbcType="DOUBLE" property="lowestAsk" />
+    <result column="HighestBid" jdbcType="DOUBLE" property="highestBid" />
+    <result column="LastSale" jdbcType="DOUBLE" property="lastSale" />
+    <result column="LastSaleTime" jdbcType="TIMESTAMP" property="lastSaleTime" />
+    <result column="LastOrderCode" jdbcType="INTEGER" property="lastOrderCode" />
+    <association column="CommondityCode" property="commodity"  select="getCommodityInfo"/>
+  </resultMap>
+  <resultMap id="CommodityResultMap" type="com.teamax.alleyoop.entity.BusCommondity">
+    <id column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="CategoryCode" jdbcType="INTEGER" property="categoryCode" />
+    <result column="BrandCode" jdbcType="INTEGER" property="brandCode" />
+    <result column="SeriesCode" jdbcType="INTEGER" property="seriesCode" />
+    <result column="CommodityName" jdbcType="VARCHAR" property="commodityName" />
+    <result column="BrandName" jdbcType="VARCHAR" property="brandName" />
+    <result column="Picture" jdbcType="VARCHAR" property="picture" />
+    <result column="ReferenceNumber" jdbcType="VARCHAR" property="referenceNumber" />
+    <result column="CaseSize" jdbcType="VARCHAR" property="caseSize" />
+    <result column="CaseMaterial" jdbcType="VARCHAR" property="caseMaterial" />
+    <result column="WatchBand" jdbcType="VARCHAR" property="watchBand" />
+    <result column="Movement" jdbcType="VARCHAR" property="movement" />
+    <result column="Dial" jdbcType="VARCHAR" property="dial" />
+    <result column="Dimensions" jdbcType="VARCHAR" property="dimensions" />
+    <result column="Material" jdbcType="VARCHAR" property="material" />
+    <result column="Retail" jdbcType="VARCHAR" property="retail" />
+    <result column="Color" jdbcType="VARCHAR" property="color" />
+    <result column="Size" jdbcType="VARCHAR" property="size" />
+    <result column="Season" jdbcType="VARCHAR" property="season" />
+    <result column="Style" jdbcType="VARCHAR" property="style" />
+    <result column="ReleaseDate" jdbcType="DATE" property="releaseDate" />
+    <result column="LowestAsk" jdbcType="DOUBLE" property="lowestAsk" />
+    <result column="LowestAskSize" jdbcType="VARCHAR" property="lowestAskSize" />
+    <result column="LowestAskTime" jdbcType="TIMESTAMP" property="lowestAskTime" />
+    <result column="HighestBid" jdbcType="DOUBLE" property="highestBid" />
+    <result column="HighestBidSize" jdbcType="VARCHAR" property="highestBidSize" />
+    <result column="HighestBidTime" jdbcType="TIMESTAMP" property="highestBidTime" />
+    <result column="NewestAsk" jdbcType="DOUBLE" property="newestAsk" />
+    <result column="NewestAskSize" jdbcType="VARCHAR" property="newestAskSize" />
+    <result column="NewestAskTime" jdbcType="TIMESTAMP" property="newestAskTime" />
+    <result column="NewestBid" jdbcType="DOUBLE" property="newestBid" />
+    <result column="NewestBidSize" jdbcType="VARCHAR" property="newestBidSize" />
+    <result column="NewestBidTime" jdbcType="TIMESTAMP" property="newestBidTime" />
+    <result column="LastSale" jdbcType="DOUBLE" property="lastSale" />
+    <result column="LastSaleSize" jdbcType="VARCHAR" property="lastSaleSize" />
+    <result column="LastSaleTime" jdbcType="TIMESTAMP" property="lastSaleTime" />
+    <result column="LastOrderCode" jdbcType="INTEGER" property="lastOrderCode" />
+    <result column="Sales" jdbcType="INTEGER" property="sales" />
+  </resultMap>
+  <select id="getCommodityInfo" parameterType="java.lang.Integer" resultMap="CommodityResultMap" useCache="true">
+    select * from bus_commondity where CommondityCode = #{CommondityCode}
+  </select>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    SizeCode, SizeName, SizeType, CommondityCode, LowestAsk, HighestBid, LastSale, LastSaleTime, 
+    LastOrderCode
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusCommonditySizeExample" resultMap="BaseResultMap" useCache="true">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_commondity_size
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap" useCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_commondity_size
+    where SizeCode = #{sizeCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_commondity_size
+    where SizeCode = #{sizeCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusCommonditySizeExample">
+    delete from bus_commondity_size
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusCommonditySize">
+    insert into bus_commondity_size (SizeCode, SizeName, SizeType, 
+      CommondityCode, LowestAsk, HighestBid, 
+      LastSale, LastSaleTime, LastOrderCode
+      )
+    values (#{sizeCode,jdbcType=INTEGER}, #{sizeName,jdbcType=VARCHAR}, #{sizeType,jdbcType=VARCHAR}, 
+      #{commondityCode,jdbcType=INTEGER}, #{lowestAsk,jdbcType=DOUBLE}, #{highestBid,jdbcType=DOUBLE}, 
+      #{lastSale,jdbcType=DOUBLE}, #{lastSaleTime,jdbcType=TIMESTAMP}, #{lastOrderCode,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusCommonditySize">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="sizeCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_commondity_size
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sizeCode != null">
+        SizeCode,
+      </if>
+      <if test="sizeName != null">
+        SizeName,
+      </if>
+      <if test="sizeType != null">
+        SizeType,
+      </if>
+      <if test="commondityCode != null">
+        CommondityCode,
+      </if>
+      <if test="lowestAsk != null">
+        LowestAsk,
+      </if>
+      <if test="highestBid != null">
+        HighestBid,
+      </if>
+      <if test="lastSale != null">
+        LastSale,
+      </if>
+      <if test="lastSaleTime != null">
+        LastSaleTime,
+      </if>
+      <if test="lastOrderCode != null">
+        LastOrderCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sizeCode != null">
+        #{sizeCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeName != null">
+        #{sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="sizeType != null">
+        #{sizeType,jdbcType=VARCHAR},
+      </if>
+      <if test="commondityCode != null">
+        #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="lowestAsk != null">
+        #{lowestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="highestBid != null">
+        #{highestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSale != null">
+        #{lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSaleTime != null">
+        #{lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOrderCode != null">
+        #{lastOrderCode,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusCommonditySizeExample" resultType="java.lang.Long">
+    select count(*) from bus_commondity_size
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_commondity_size
+    <set>
+      <if test="record.sizeCode != null">
+        SizeCode = #{record.sizeCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.sizeName != null">
+        SizeName = #{record.sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sizeType != null">
+        SizeType = #{record.sizeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commondityCode != null">
+        CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.lowestAsk != null">
+        LowestAsk = #{record.lowestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="record.highestBid != null">
+        HighestBid = #{record.highestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="record.lastSale != null">
+        LastSale = #{record.lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="record.lastSaleTime != null">
+        LastSaleTime = #{record.lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastOrderCode != null">
+        LastOrderCode = #{record.lastOrderCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_commondity_size
+    set SizeCode = #{record.sizeCode,jdbcType=INTEGER},
+      SizeName = #{record.sizeName,jdbcType=VARCHAR},
+      SizeType = #{record.sizeType,jdbcType=VARCHAR},
+      CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      LowestAsk = #{record.lowestAsk,jdbcType=DOUBLE},
+      HighestBid = #{record.highestBid,jdbcType=DOUBLE},
+      LastSale = #{record.lastSale,jdbcType=DOUBLE},
+      LastSaleTime = #{record.lastSaleTime,jdbcType=TIMESTAMP},
+      LastOrderCode = #{record.lastOrderCode,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusCommonditySize">
+    update bus_commondity_size
+    <set>
+      <if test="sizeName != null">
+        SizeName = #{sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="sizeType != null">
+        SizeType = #{sizeType,jdbcType=VARCHAR},
+      </if>
+      <if test="commondityCode != null">
+        CommondityCode = #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="lowestAsk != null">
+        LowestAsk = #{lowestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="highestBid != null">
+        HighestBid = #{highestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSale != null">
+        LastSale = #{lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSaleTime != null">
+        LastSaleTime = #{lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOrderCode != null">
+        LastOrderCode = #{lastOrderCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    where SizeCode = #{sizeCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusCommonditySize">
+    update bus_commondity_size
+    set SizeName = #{sizeName,jdbcType=VARCHAR},
+      SizeType = #{sizeType,jdbcType=VARCHAR},
+      CommondityCode = #{commondityCode,jdbcType=INTEGER},
+      LowestAsk = #{lowestAsk,jdbcType=DOUBLE},
+      HighestBid = #{highestBid,jdbcType=DOUBLE},
+      LastSale = #{lastSale,jdbcType=DOUBLE},
+      LastSaleTime = #{lastSaleTime,jdbcType=TIMESTAMP},
+      LastOrderCode = #{lastOrderCode,jdbcType=INTEGER}
+    where SizeCode = #{sizeCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateLastSale" parameterType="com.teamax.alleyoop.entity.BusCommonditySize">
+    update bus_commondity_size
+    <set>
+      <if test="lastSale != null">
+        LastSale = #{lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSaleTime != null">
+        LastSaleTime = #{lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOrderCode != null">
+        LastOrderCode = #{lastOrderCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    where CommondityCode = #{commondityCode,jdbcType=INTEGER} and SizeName = #{sizeName,jdbcType=VARCHAR}
+  </update>
+</mapper>

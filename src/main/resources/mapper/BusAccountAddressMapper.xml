@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusAccountAddressMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusAccountAddress">
+    <id column="AddressCode" jdbcType="INTEGER" property="addressCode" />
+    <result column="AddressType" jdbcType="INTEGER" property="addressType" />
+    <result column="FirstName" jdbcType="VARCHAR" property="firstName" />
+    <result column="LastName" jdbcType="VARCHAR" property="lastName" />
+    <result column="Country" jdbcType="VARCHAR" property="country" />
+    <result column="ContryCode" jdbcType="INTEGER" property="contryCode" />
+    <result column="Province" jdbcType="VARCHAR" property="province" />
+    <result column="ProvinceCode" jdbcType="INTEGER" property="provinceCode" />
+    <result column="City" jdbcType="VARCHAR" property="city" />
+    <result column="Address" jdbcType="VARCHAR" property="address" />
+    <result column="Address2" jdbcType="VARCHAR" property="address2" />
+    <result column="PostalCode" jdbcType="VARCHAR" property="postalCode" />
+    <result column="PhoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="DefaultUsed" jdbcType="INTEGER" property="defaultUsed" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    AddressCode, AddressType, FirstName, LastName, Country, ContryCode, Province, ProvinceCode, 
+    City, Address, Address2, PostalCode, PhoneNumber, AccountCode, DefaultUsed
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusAccountAddressExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_account_address
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_account_address
+    where AddressCode = #{addressCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_account_address
+    where AddressCode = #{addressCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusAccountAddressExample">
+    delete from bus_account_address
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusAccountAddress">
+    insert into bus_account_address (AddressCode, AddressType, FirstName, 
+      LastName, Country, ContryCode, 
+      Province, ProvinceCode, City, 
+      Address, Address2, PostalCode, 
+      PhoneNumber, AccountCode, DefaultUsed
+      )
+    values (#{addressCode,jdbcType=INTEGER}, #{addressType,jdbcType=INTEGER}, #{firstName,jdbcType=VARCHAR}, 
+      #{lastName,jdbcType=VARCHAR}, #{country,jdbcType=VARCHAR}, #{contryCode,jdbcType=INTEGER}, 
+      #{province,jdbcType=VARCHAR}, #{provinceCode,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{address2,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, 
+      #{phoneNumber,jdbcType=VARCHAR}, #{accountCode,jdbcType=INTEGER}, #{defaultUsed,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusAccountAddress">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="addressCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_account_address
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="addressCode != null">
+        AddressCode,
+      </if>
+      <if test="addressType != null">
+        AddressType,
+      </if>
+      <if test="firstName != null">
+        FirstName,
+      </if>
+      <if test="lastName != null">
+        LastName,
+      </if>
+      <if test="country != null">
+        Country,
+      </if>
+      <if test="contryCode != null">
+        ContryCode,
+      </if>
+      <if test="province != null">
+        Province,
+      </if>
+      <if test="provinceCode != null">
+        ProvinceCode,
+      </if>
+      <if test="city != null">
+        City,
+      </if>
+      <if test="address != null">
+        Address,
+      </if>
+      <if test="address2 != null">
+        Address2,
+      </if>
+      <if test="postalCode != null">
+        PostalCode,
+      </if>
+      <if test="phoneNumber != null">
+        PhoneNumber,
+      </if>
+      <if test="accountCode != null">
+        AccountCode,
+      </if>
+      <if test="defaultUsed != null">
+        DefaultUsed,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="addressCode != null">
+        #{addressCode,jdbcType=INTEGER},
+      </if>
+      <if test="addressType != null">
+        #{addressType,jdbcType=INTEGER},
+      </if>
+      <if test="firstName != null">
+        #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+        #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="contryCode != null">
+        #{contryCode,jdbcType=INTEGER},
+      </if>
+      <if test="province != null">
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null">
+        #{provinceCode,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="address2 != null">
+        #{address2,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null">
+        #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null">
+        #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="defaultUsed != null">
+        #{defaultUsed,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusAccountAddressExample" resultType="java.lang.Long">
+    select count(*) from bus_account_address
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_account_address
+    <set>
+      <if test="record.addressCode != null">
+        AddressCode = #{record.addressCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.addressType != null">
+        AddressType = #{record.addressType,jdbcType=INTEGER},
+      </if>
+      <if test="record.firstName != null">
+        FirstName = #{record.firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastName != null">
+        LastName = #{record.lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.country != null">
+        Country = #{record.country,jdbcType=VARCHAR},
+      </if>
+      <if test="record.contryCode != null">
+        ContryCode = #{record.contryCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.province != null">
+        Province = #{record.province,jdbcType=VARCHAR},
+      </if>
+      <if test="record.provinceCode != null">
+        ProvinceCode = #{record.provinceCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.city != null">
+        City = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address != null">
+        Address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.address2 != null">
+        Address2 = #{record.address2,jdbcType=VARCHAR},
+      </if>
+      <if test="record.postalCode != null">
+        PostalCode = #{record.postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phoneNumber != null">
+        PhoneNumber = #{record.phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountCode != null">
+        AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.defaultUsed != null">
+        DefaultUsed = #{record.defaultUsed,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_account_address
+    set AddressCode = #{record.addressCode,jdbcType=INTEGER},
+      AddressType = #{record.addressType,jdbcType=INTEGER},
+      FirstName = #{record.firstName,jdbcType=VARCHAR},
+      LastName = #{record.lastName,jdbcType=VARCHAR},
+      Country = #{record.country,jdbcType=VARCHAR},
+      ContryCode = #{record.contryCode,jdbcType=INTEGER},
+      Province = #{record.province,jdbcType=VARCHAR},
+      ProvinceCode = #{record.provinceCode,jdbcType=INTEGER},
+      City = #{record.city,jdbcType=VARCHAR},
+      Address = #{record.address,jdbcType=VARCHAR},
+      Address2 = #{record.address2,jdbcType=VARCHAR},
+      PostalCode = #{record.postalCode,jdbcType=VARCHAR},
+      PhoneNumber = #{record.phoneNumber,jdbcType=VARCHAR},
+      AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      DefaultUsed = #{record.defaultUsed,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusAccountAddress">
+    update bus_account_address
+    <set>
+      <if test="addressType != null">
+        AddressType = #{addressType,jdbcType=INTEGER},
+      </if>
+      <if test="firstName != null">
+        FirstName = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+        LastName = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null">
+        Country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="contryCode != null">
+        ContryCode = #{contryCode,jdbcType=INTEGER},
+      </if>
+      <if test="province != null">
+        Province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceCode != null">
+        ProvinceCode = #{provinceCode,jdbcType=INTEGER},
+      </if>
+      <if test="city != null">
+        City = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        Address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="address2 != null">
+        Address2 = #{address2,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null">
+        PostalCode = #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNumber != null">
+        PhoneNumber = #{phoneNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null">
+        AccountCode = #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="defaultUsed != null">
+        DefaultUsed = #{defaultUsed,jdbcType=INTEGER},
+      </if>
+    </set>
+    where AddressCode = #{addressCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusAccountAddress">
+    update bus_account_address
+    set AddressType = #{addressType,jdbcType=INTEGER},
+      FirstName = #{firstName,jdbcType=VARCHAR},
+      LastName = #{lastName,jdbcType=VARCHAR},
+      Country = #{country,jdbcType=VARCHAR},
+      ContryCode = #{contryCode,jdbcType=INTEGER},
+      Province = #{province,jdbcType=VARCHAR},
+      ProvinceCode = #{provinceCode,jdbcType=INTEGER},
+      City = #{city,jdbcType=VARCHAR},
+      Address = #{address,jdbcType=VARCHAR},
+      Address2 = #{address2,jdbcType=VARCHAR},
+      PostalCode = #{postalCode,jdbcType=VARCHAR},
+      PhoneNumber = #{phoneNumber,jdbcType=VARCHAR},
+      AccountCode = #{accountCode,jdbcType=INTEGER},
+      DefaultUsed = #{defaultUsed,jdbcType=INTEGER}
+    where AddressCode = #{addressCode,jdbcType=INTEGER}
+  </update>
+</mapper>

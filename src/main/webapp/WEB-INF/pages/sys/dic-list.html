@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字典管理列表</title>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/user.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/news.css" rel="stylesheet" type="text/css" />
+    <style>
+        .mould-content{display: flex;padding: 0}
+        .mould-left{flex: 0 0 24%;background-color: #fff;border-radius: 6px;height: 100%;overflow-y: auto}
+        .mould-right{flex: 1;margin-left: 4px;background-color: #fff;padding: 10px;border-radius: 6px}
+    </style>
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+    <div class="mould-main">
+        <div class="mould-top">
+            <p>字典管理主要是对系统内字典进行管理。</p>
+        </div>
+        <div class="mould-middle">
+            <div class="mould-content">
+                <div class="mould-left">
+                    <h6>字典</h6>
+                    <ul class="log_nav">
+                        <li type="1" class="log_active">商品规格</li>
+                        <!--
+                        <li type="0">操作日志</li>
+                        <li type="2">异常日志</li>
+                        -->
+                    </ul>
+                </div>
+                <div class="mould-right">
+                    <div class="mould-search">
+                        <div class="mould-items">
+                            <div class="mould-item">
+                                <div class="item-text">商品类型</div>
+                                <div class="item-input">
+                                    <select id="category">
+                                        <option value="">全部</option>
+                                        <option value="1">球鞋</option>
+                                        <option value="2">服装</option>
+                                        <option value="3">手表</option>
+                                        <option value="4">包</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <div class="mould-btn">
+                        <div class="btn-item btn-query">查询</div>
+                        <div class="btn-item btn-add">新增</div>
+                        <div class="btn-item btn-update">修改</div>
+                        <div class="btn-item btn-batchDelete">删除</div>
+                    </div>
+                    <ul class="news_table">
+                        <li>
+                            <table id="dic_size" class="table_style" style="margin: 0 auto" ></table>
+                        </li>
+                        <!--
+                        <li style="display: none">
+                            <table id="operate" class="table_style" style="margin: 0 auto" ></table>
+                        </li>
+                        <li style="display: none">
+                            <table id="exception" class="table_style" style="margin: 0 auto" ></table>
+                        </li>
+                        -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="mould-bottom">
+            <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+        </div>
+    </div>
+    <script src="../../../js/jquery-2.2.0.min.js"></script>
+    <script src="../../../plugin/bstable/js/bootstrap.min.js"></script>
+    <script src="../../../plugin/bstable/js/bootstrap-table.js"></script>
+    <script src="../../../plugin/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+    <script type="text/javascript">
+        var table = "dic_size";
+        $(function () {
+            //默认加载商品规格字典
+            loadDicList(1);
+            //日志类型标签切换
+            $(".log_nav li").each(function(index){
+                $(this).click(function(){
+                    $(".log_nav li").removeClass("log_active");
+                    $(this).addClass("log_active");
+                    $(".news_table>li").eq(index).show().siblings("li").stop().hide();
+                    var type = $(this).attr("type");
+                    loadLogList(type);
+                })
+            });
+
+            //查询按钮
+            $(".btn-query").on("click", function () {
+                $("#"+table).bootstrapTable('refresh');
+            });
+            //新增字典
+            $(".btn-add").on("click",function(){
+                layer.open({
+                    type: 2,
+                    title: '新增商品规格',
+                    shade: 0.5,
+                    skin: 'layui-layer-rim',
+                    closeBtn:1,
+                    area: ['500px', '320px'],
+                    content: '/page/sys/dic-add.shtm'
+                });
+            });
+            //修改字典
+            $(".btn-update").on("click",function () {
+                var selections = $("#"+table).bootstrapTable('getSelections');
+                if(selections.length == 0 || selections.length > 1){
+                    layer.msg("请选择一条数据进行操作");
+                    return;
+                }else{
+                    var sizeCode = selections[0].sizeCode;
+                    layer.open({
+                        type: 2,
+                        title: '商品规格修改',
+                        shade: 0.5,
+                        skin: 'layui-layer-rim',
+                        closeBtn:1,
+                        area: ['500px', '320px'],
+                        content: '/page/sys/dic-update.shtm?sizeCode='+sizeCode
+                    });
+                }
+            });
+            //批量删除
+            $(".btn-batchDelete").on("click",function () {
+                var selections = $("#"+table).bootstrapTable('getSelections');
+                if(selections.length == 0){
+                    layer.msg("请选择一条数据进行操作");
+                    return;
+                }else{
+                    var array=[];
+                    $.each(selections,function (index,row) {
+                        array.push(row.sizeCode);
+                    });
+                    layer.confirm('是否确定删除?', {
+                        title: '提示',
+                        btn: ['确定', '取消'] //按钮
+                    }, function (index) {
+                        $.ajax({
+                            url:'/dic/size/batchDelete.shtm',
+                            type:'POST',
+                            dataType:"json",
+                            data:JSON.stringify({ids:array.join(",")}),
+                            contentType: "application/json; charset=utf-8",
+                            success:function (result) {
+                                layer.msg(result.msg);
+                                $("#"+table).bootstrapTable('refresh');
+                            }
+                        });
+                    }, function (index) {
+                        layer.close(index);
+                    });
+                }
+            });
+        });
+
+        /**
+         * 根据字典类型加载字典列表
+         * @param type
+         */
+        function loadDicList(type){
+            if(type==1){table="dic_size";}
+            $('#'+table).bootstrapTable({
+                method: "post",
+                striped: false,
+                singleSelect: false,
+                url: "/dic/size/list.shtm",
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: 10,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                sidePagination: "server", //服务端请求
+                clickToSelect : true, //是否启用点击选中行
+                queryParams:function(params) {
+                    return {
+                        pageNum: params.offset/params.limit+1,
+                        pageSize: params.limit,//页码大小
+                        operation:$("#operation").val(),
+                        category:$("#category").find("option:selected").val()
+                    };
+                },
+                //返回数据格式处理
+                responseHandler: function(res) {
+                    return {
+                        "total": res.data.total,//总页数
+                        "rows": res.data.list   //数据
+                    };
+                },
+                onDblClickRow: function (row) {},
+                columns: [
+                    {
+                        checkbox: "true",
+                        field: 'check',
+                        align: 'center'
+                    },
+                    {
+                        title: "商品类型",
+                        field: 'commondityType',
+                        align: 'center',
+                        formatter:function(val,row){
+                            if(val==1){return "鞋";}
+                            if(val==2){return "服装";}
+                            if(val==3){return "手表";}
+                            if(val==4){return "包";}
+                        }
+                    },
+                    {
+                        title: '规格名称',
+                        field: 'sizeName',
+                        align: 'center'
+                    },
+                    {
+                        title: '排序',
+                        field: 'sizeIndex',
+                        align: 'center'
+                    }
+                   /* ,{
+                        title: '操作',
+                        field: 'sizeCode',
+                        width: '180px',
+                        align: 'center',
+                        formatter:function(val,row){
+                            var a='<a href="javascript:void(0)" class="btn btn-xs btn-success" onclick="updateDic('+val+')" style="margin-right: 8px;">修改</a>';
+                            var b='<a href="javascript:void(0)"  class="btn btn-xs btn-danger" onclick="deleteDic('+val+')">删除</a>';
+                            return a+b;
+                        }
+                    }
+                    */
+                ]
+            });
+        }
+    </script>
+</body>
+</html>

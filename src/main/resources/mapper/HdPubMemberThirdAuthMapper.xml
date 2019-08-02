@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.teamax.alleyoop.dao.HdPubMemberThirdAuthMapper" >
+
+    <!-- -->
+    <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.HdPubMemberThirdAuthEntity">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_id" property="userId" jdbcType="BIGINT" />
+        <result column="oauth_key" property="oauthKey" jdbcType="BIGINT" />
+        <result column="oauth_name" property="oauthName" jdbcType="VARCHAR" />
+        <result column="oauth_access_token" property="oauthAccessToken" jdbcType="VARCHAR" />
+        <result column="oauth_token_expires" property="oauthTokenExpires" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!-- sql字段信息 -->
+    <sql id="Base_Column_List" >
+        id,user_id,oauth_key,oauth_name,oauth_access_token,oauth_token_expires
+    </sql>
+
+    <!-- 根据微信服务器返回的openid,查询第三方授权信息表 add by DaWei 2018-07-18 14:06 -->
+    <select id="findEntityByOpenId" parameterType="java.lang.String" resultMap="BaseResultMap" >
+        select <include refid="Base_Column_List" /> from hd_pub_member_third_auth where oauth_key = #{openid,jdbcType=VARCHAR}
+    </select>
+
+    <!--根据用户id,新增第三方授权信息 add by DaWei 2018-07-18 14:17  -->
+    <insert id="createHdPubMemberThirdAuth" parameterType="com.teamax.alleyoop.entity.HdPubMemberThirdAuthEntity" >
+        insert into hd_pub_member_third_auth
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                user_id,
+            </if>
+            <if test="oauthKey != null" >
+                oauth_key,
+            </if>
+            <if test="oauthName != null" >
+                oauth_name,
+            </if>
+            <if test="oauthAccessToken != null" >
+                oauth_access_token,
+            </if>
+            <if test="oauthTokenExpires != null" >
+                oauth_token_expires,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides="," >
+            <if test="userId != null" >
+                #{userId,jdbcType=BIGINT},
+            </if>
+            <if test="oauthKey != null" >
+                #{oauthKey,jdbcType=BIGINT},
+            </if>
+            <if test="oauthName != null" >
+                #{oauthName,jdbcType=VARCHAR},
+            </if>
+            <if test="oauthAccessToken != null" >
+                #{oauthAccessToken,jdbcType=VARCHAR},
+            </if>
+            <if test="oauthTokenExpires != null" >
+                #{oauthTokenExpires,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 根据openid,更新access_token和expires_in add by DaWei 2018-07-18 15:49 -->
+    <update id="updateAccessTokenByMap" parameterType="java.util.Map" >
+        update hd_pub_member_third_auth
+        <set>
+            <if test="obj.access_token != null" >
+                oauth_access_token = #{obj.access_token,jdbcType=VARCHAR}
+            </if>
+            <if test="obj.expires_in != null" >
+                oauth_token_expires = #{obj.expires_in,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where oauth_key = #{obj.openid,jdbcType=VARCHAR}
+    </update>
+
+</mapper>

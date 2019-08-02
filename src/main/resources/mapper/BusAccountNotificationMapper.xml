@@ -1,0 +1,592 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusAccountNotificationMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusAccountNotification">
+    <id column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="BiddingNewLowestAsk" jdbcType="VARCHAR" property="biddingNewLowestAsk" />
+    <result column="BiddingNewHighestBid" jdbcType="VARCHAR" property="biddingNewHighestBid" />
+    <result column="BidExpiring" jdbcType="VARCHAR" property="bidExpiring" />
+    <result column="BidExpired" jdbcType="VARCHAR" property="bidExpired" />
+    <result column="AskMatchesExpiredBid" jdbcType="VARCHAR" property="askMatchesExpiredBid" />
+    <result column="BuyerNearbyMatch" jdbcType="VARCHAR" property="buyerNearbyMatch" />
+    <result column="BidAccepted" jdbcType="VARCHAR" property="bidAccepted" />
+    <result column="IPOBidAlmost" jdbcType="VARCHAR" property="IPOBidAlmost" />
+    <result column="IPOBidOut" jdbcType="VARCHAR" property="IPOBidOut" />
+    <result column="IPOBidAccepted" jdbcType="VARCHAR" property="IPOBidAccepted" />
+    <result column="FollowingNewLowestAsk" jdbcType="VARCHAR" property="followingNewLowestAsk" />
+    <result column="AskingNewHighestBid" jdbcType="VARCHAR" property="askingNewHighestBid" />
+    <result column="AskingNewHighestBidPercent" jdbcType="DOUBLE" property="askingNewHighestBidPercent" />
+    <result column="AskingNewLowestAsk" jdbcType="VARCHAR" property="askingNewLowestAsk" />
+    <result column="AskExpiring" jdbcType="VARCHAR" property="askExpiring" />
+    <result column="AskExpired" jdbcType="VARCHAR" property="askExpired" />
+    <result column="ItemSold" jdbcType="VARCHAR" property="itemSold" />
+    <result column="FirstSellerHasNotShipped" jdbcType="VARCHAR" property="firstSellerHasNotShipped" />
+    <result column="SecondSellerHasNotShipped" jdbcType="VARCHAR" property="secondSellerHasNotShipped" />
+    <result column="ThirdSellerHasNotShipped" jdbcType="VARCHAR" property="thirdSellerHasNotShipped" />
+    <result column="ProductFeatures" jdbcType="VARCHAR" property="productFeatures" />
+    <result column="SneakerNews" jdbcType="VARCHAR" property="sneakerNews" />
+    <result column="HandbagNews" jdbcType="VARCHAR" property="handbagNews" />
+    <result column="WatchNews" jdbcType="VARCHAR" property="watchNews" />
+    <result column="StreetwearNews" jdbcType="VARCHAR" property="streetwearNews" />
+    <result column="PriceDropEmail" jdbcType="VARCHAR" property="priceDropEmail" />
+    <result column="WelcomeSeries" jdbcType="VARCHAR" property="welcomeSeries" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    AccountCode, BiddingNewLowestAsk, BiddingNewHighestBid, BidExpiring, BidExpired, 
+    AskMatchesExpiredBid, BuyerNearbyMatch, BidAccepted, IPOBidAlmost, IPOBidOut, IPOBidAccepted, 
+    FollowingNewLowestAsk, AskingNewHighestBid, AskingNewHighestBidPercent, AskingNewLowestAsk, 
+    AskExpiring, AskExpired, ItemSold, FirstSellerHasNotShipped, SecondSellerHasNotShipped, 
+    ThirdSellerHasNotShipped, ProductFeatures, SneakerNews, HandbagNews, WatchNews, StreetwearNews, 
+    PriceDropEmail, WelcomeSeries
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusAccountNotificationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_account_notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_account_notification
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_account_notification
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusAccountNotificationExample">
+    delete from bus_account_notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusAccountNotification">
+    insert into bus_account_notification (AccountCode, BiddingNewLowestAsk, 
+      BiddingNewHighestBid, BidExpiring, BidExpired, 
+      AskMatchesExpiredBid, BuyerNearbyMatch, 
+      BidAccepted, IPOBidAlmost, IPOBidOut, 
+      IPOBidAccepted, FollowingNewLowestAsk, 
+      AskingNewHighestBid, AskingNewHighestBidPercent, 
+      AskingNewLowestAsk, AskExpiring, AskExpired, 
+      ItemSold, FirstSellerHasNotShipped, SecondSellerHasNotShipped, 
+      ThirdSellerHasNotShipped, ProductFeatures, 
+      SneakerNews, HandbagNews, WatchNews, 
+      StreetwearNews, PriceDropEmail, WelcomeSeries
+      )
+    values (#{accountCode,jdbcType=INTEGER}, #{biddingNewLowestAsk,jdbcType=VARCHAR}, 
+      #{biddingNewHighestBid,jdbcType=VARCHAR}, #{bidExpiring,jdbcType=VARCHAR}, #{bidExpired,jdbcType=VARCHAR}, 
+      #{askMatchesExpiredBid,jdbcType=VARCHAR}, #{buyerNearbyMatch,jdbcType=VARCHAR}, 
+      #{bidAccepted,jdbcType=VARCHAR}, #{IPOBidAlmost,jdbcType=VARCHAR}, #{IPOBidOut,jdbcType=VARCHAR}, 
+      #{IPOBidAccepted,jdbcType=VARCHAR}, #{followingNewLowestAsk,jdbcType=VARCHAR}, 
+      #{askingNewHighestBid,jdbcType=VARCHAR}, #{askingNewHighestBidPercent,jdbcType=DOUBLE}, 
+      #{askingNewLowestAsk,jdbcType=VARCHAR}, #{askExpiring,jdbcType=VARCHAR}, #{askExpired,jdbcType=VARCHAR}, 
+      #{itemSold,jdbcType=VARCHAR}, #{firstSellerHasNotShipped,jdbcType=VARCHAR}, #{secondSellerHasNotShipped,jdbcType=VARCHAR}, 
+      #{thirdSellerHasNotShipped,jdbcType=VARCHAR}, #{productFeatures,jdbcType=VARCHAR}, 
+      #{sneakerNews,jdbcType=VARCHAR}, #{handbagNews,jdbcType=VARCHAR}, #{watchNews,jdbcType=VARCHAR}, 
+      #{streetwearNews,jdbcType=VARCHAR}, #{priceDropEmail,jdbcType=VARCHAR}, #{welcomeSeries,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusAccountNotification">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="accountCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_account_notification
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountCode != null">
+        AccountCode,
+      </if>
+      <if test="biddingNewLowestAsk != null">
+        BiddingNewLowestAsk,
+      </if>
+      <if test="biddingNewHighestBid != null">
+        BiddingNewHighestBid,
+      </if>
+      <if test="bidExpiring != null">
+        BidExpiring,
+      </if>
+      <if test="bidExpired != null">
+        BidExpired,
+      </if>
+      <if test="askMatchesExpiredBid != null">
+        AskMatchesExpiredBid,
+      </if>
+      <if test="buyerNearbyMatch != null">
+        BuyerNearbyMatch,
+      </if>
+      <if test="bidAccepted != null">
+        BidAccepted,
+      </if>
+      <if test="IPOBidAlmost != null">
+        IPOBidAlmost,
+      </if>
+      <if test="IPOBidOut != null">
+        IPOBidOut,
+      </if>
+      <if test="IPOBidAccepted != null">
+        IPOBidAccepted,
+      </if>
+      <if test="followingNewLowestAsk != null">
+        FollowingNewLowestAsk,
+      </if>
+      <if test="askingNewHighestBid != null">
+        AskingNewHighestBid,
+      </if>
+      <if test="askingNewHighestBidPercent != null">
+        AskingNewHighestBidPercent,
+      </if>
+      <if test="askingNewLowestAsk != null">
+        AskingNewLowestAsk,
+      </if>
+      <if test="askExpiring != null">
+        AskExpiring,
+      </if>
+      <if test="askExpired != null">
+        AskExpired,
+      </if>
+      <if test="itemSold != null">
+        ItemSold,
+      </if>
+      <if test="firstSellerHasNotShipped != null">
+        FirstSellerHasNotShipped,
+      </if>
+      <if test="secondSellerHasNotShipped != null">
+        SecondSellerHasNotShipped,
+      </if>
+      <if test="thirdSellerHasNotShipped != null">
+        ThirdSellerHasNotShipped,
+      </if>
+      <if test="productFeatures != null">
+        ProductFeatures,
+      </if>
+      <if test="sneakerNews != null">
+        SneakerNews,
+      </if>
+      <if test="handbagNews != null">
+        HandbagNews,
+      </if>
+      <if test="watchNews != null">
+        WatchNews,
+      </if>
+      <if test="streetwearNews != null">
+        StreetwearNews,
+      </if>
+      <if test="priceDropEmail != null">
+        PriceDropEmail,
+      </if>
+      <if test="welcomeSeries != null">
+        WelcomeSeries,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountCode != null">
+        #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="biddingNewLowestAsk != null">
+        #{biddingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="biddingNewHighestBid != null">
+        #{biddingNewHighestBid,jdbcType=VARCHAR},
+      </if>
+      <if test="bidExpiring != null">
+        #{bidExpiring,jdbcType=VARCHAR},
+      </if>
+      <if test="bidExpired != null">
+        #{bidExpired,jdbcType=VARCHAR},
+      </if>
+      <if test="askMatchesExpiredBid != null">
+        #{askMatchesExpiredBid,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerNearbyMatch != null">
+        #{buyerNearbyMatch,jdbcType=VARCHAR},
+      </if>
+      <if test="bidAccepted != null">
+        #{bidAccepted,jdbcType=VARCHAR},
+      </if>
+      <if test="IPOBidAlmost != null">
+        #{IPOBidAlmost,jdbcType=VARCHAR},
+      </if>
+      <if test="IPOBidOut != null">
+        #{IPOBidOut,jdbcType=VARCHAR},
+      </if>
+      <if test="IPOBidAccepted != null">
+        #{IPOBidAccepted,jdbcType=VARCHAR},
+      </if>
+      <if test="followingNewLowestAsk != null">
+        #{followingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="askingNewHighestBid != null">
+        #{askingNewHighestBid,jdbcType=VARCHAR},
+      </if>
+      <if test="askingNewHighestBidPercent != null">
+        #{askingNewHighestBidPercent,jdbcType=DOUBLE},
+      </if>
+      <if test="askingNewLowestAsk != null">
+        #{askingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="askExpiring != null">
+        #{askExpiring,jdbcType=VARCHAR},
+      </if>
+      <if test="askExpired != null">
+        #{askExpired,jdbcType=VARCHAR},
+      </if>
+      <if test="itemSold != null">
+        #{itemSold,jdbcType=VARCHAR},
+      </if>
+      <if test="firstSellerHasNotShipped != null">
+        #{firstSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="secondSellerHasNotShipped != null">
+        #{secondSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdSellerHasNotShipped != null">
+        #{thirdSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="productFeatures != null">
+        #{productFeatures,jdbcType=VARCHAR},
+      </if>
+      <if test="sneakerNews != null">
+        #{sneakerNews,jdbcType=VARCHAR},
+      </if>
+      <if test="handbagNews != null">
+        #{handbagNews,jdbcType=VARCHAR},
+      </if>
+      <if test="watchNews != null">
+        #{watchNews,jdbcType=VARCHAR},
+      </if>
+      <if test="streetwearNews != null">
+        #{streetwearNews,jdbcType=VARCHAR},
+      </if>
+      <if test="priceDropEmail != null">
+        #{priceDropEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="welcomeSeries != null">
+        #{welcomeSeries,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusAccountNotificationExample" resultType="java.lang.Long">
+    select count(*) from bus_account_notification
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_account_notification
+    <set>
+      <if test="record.accountCode != null">
+        AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.biddingNewLowestAsk != null">
+        BiddingNewLowestAsk = #{record.biddingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.biddingNewHighestBid != null">
+        BiddingNewHighestBid = #{record.biddingNewHighestBid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bidExpiring != null">
+        BidExpiring = #{record.bidExpiring,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bidExpired != null">
+        BidExpired = #{record.bidExpired,jdbcType=VARCHAR},
+      </if>
+      <if test="record.askMatchesExpiredBid != null">
+        AskMatchesExpiredBid = #{record.askMatchesExpiredBid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buyerNearbyMatch != null">
+        BuyerNearbyMatch = #{record.buyerNearbyMatch,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bidAccepted != null">
+        BidAccepted = #{record.bidAccepted,jdbcType=VARCHAR},
+      </if>
+      <if test="record.IPOBidAlmost != null">
+        IPOBidAlmost = #{record.IPOBidAlmost,jdbcType=VARCHAR},
+      </if>
+      <if test="record.IPOBidOut != null">
+        IPOBidOut = #{record.IPOBidOut,jdbcType=VARCHAR},
+      </if>
+      <if test="record.IPOBidAccepted != null">
+        IPOBidAccepted = #{record.IPOBidAccepted,jdbcType=VARCHAR},
+      </if>
+      <if test="record.followingNewLowestAsk != null">
+        FollowingNewLowestAsk = #{record.followingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.askingNewHighestBid != null">
+        AskingNewHighestBid = #{record.askingNewHighestBid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.askingNewHighestBidPercent != null">
+        AskingNewHighestBidPercent = #{record.askingNewHighestBidPercent,jdbcType=DOUBLE},
+      </if>
+      <if test="record.askingNewLowestAsk != null">
+        AskingNewLowestAsk = #{record.askingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="record.askExpiring != null">
+        AskExpiring = #{record.askExpiring,jdbcType=VARCHAR},
+      </if>
+      <if test="record.askExpired != null">
+        AskExpired = #{record.askExpired,jdbcType=VARCHAR},
+      </if>
+      <if test="record.itemSold != null">
+        ItemSold = #{record.itemSold,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstSellerHasNotShipped != null">
+        FirstSellerHasNotShipped = #{record.firstSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secondSellerHasNotShipped != null">
+        SecondSellerHasNotShipped = #{record.secondSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="record.thirdSellerHasNotShipped != null">
+        ThirdSellerHasNotShipped = #{record.thirdSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="record.productFeatures != null">
+        ProductFeatures = #{record.productFeatures,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sneakerNews != null">
+        SneakerNews = #{record.sneakerNews,jdbcType=VARCHAR},
+      </if>
+      <if test="record.handbagNews != null">
+        HandbagNews = #{record.handbagNews,jdbcType=VARCHAR},
+      </if>
+      <if test="record.watchNews != null">
+        WatchNews = #{record.watchNews,jdbcType=VARCHAR},
+      </if>
+      <if test="record.streetwearNews != null">
+        StreetwearNews = #{record.streetwearNews,jdbcType=VARCHAR},
+      </if>
+      <if test="record.priceDropEmail != null">
+        PriceDropEmail = #{record.priceDropEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.welcomeSeries != null">
+        WelcomeSeries = #{record.welcomeSeries,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_account_notification
+    set AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      BiddingNewLowestAsk = #{record.biddingNewLowestAsk,jdbcType=VARCHAR},
+      BiddingNewHighestBid = #{record.biddingNewHighestBid,jdbcType=VARCHAR},
+      BidExpiring = #{record.bidExpiring,jdbcType=VARCHAR},
+      BidExpired = #{record.bidExpired,jdbcType=VARCHAR},
+      AskMatchesExpiredBid = #{record.askMatchesExpiredBid,jdbcType=VARCHAR},
+      BuyerNearbyMatch = #{record.buyerNearbyMatch,jdbcType=VARCHAR},
+      BidAccepted = #{record.bidAccepted,jdbcType=VARCHAR},
+      IPOBidAlmost = #{record.IPOBidAlmost,jdbcType=VARCHAR},
+      IPOBidOut = #{record.IPOBidOut,jdbcType=VARCHAR},
+      IPOBidAccepted = #{record.IPOBidAccepted,jdbcType=VARCHAR},
+      FollowingNewLowestAsk = #{record.followingNewLowestAsk,jdbcType=VARCHAR},
+      AskingNewHighestBid = #{record.askingNewHighestBid,jdbcType=VARCHAR},
+      AskingNewHighestBidPercent = #{record.askingNewHighestBidPercent,jdbcType=DOUBLE},
+      AskingNewLowestAsk = #{record.askingNewLowestAsk,jdbcType=VARCHAR},
+      AskExpiring = #{record.askExpiring,jdbcType=VARCHAR},
+      AskExpired = #{record.askExpired,jdbcType=VARCHAR},
+      ItemSold = #{record.itemSold,jdbcType=VARCHAR},
+      FirstSellerHasNotShipped = #{record.firstSellerHasNotShipped,jdbcType=VARCHAR},
+      SecondSellerHasNotShipped = #{record.secondSellerHasNotShipped,jdbcType=VARCHAR},
+      ThirdSellerHasNotShipped = #{record.thirdSellerHasNotShipped,jdbcType=VARCHAR},
+      ProductFeatures = #{record.productFeatures,jdbcType=VARCHAR},
+      SneakerNews = #{record.sneakerNews,jdbcType=VARCHAR},
+      HandbagNews = #{record.handbagNews,jdbcType=VARCHAR},
+      WatchNews = #{record.watchNews,jdbcType=VARCHAR},
+      StreetwearNews = #{record.streetwearNews,jdbcType=VARCHAR},
+      PriceDropEmail = #{record.priceDropEmail,jdbcType=VARCHAR},
+      WelcomeSeries = #{record.welcomeSeries,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusAccountNotification">
+    update bus_account_notification
+    <set>
+      <if test="biddingNewLowestAsk != null">
+        BiddingNewLowestAsk = #{biddingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="biddingNewHighestBid != null">
+        BiddingNewHighestBid = #{biddingNewHighestBid,jdbcType=VARCHAR},
+      </if>
+      <if test="bidExpiring != null">
+        BidExpiring = #{bidExpiring,jdbcType=VARCHAR},
+      </if>
+      <if test="bidExpired != null">
+        BidExpired = #{bidExpired,jdbcType=VARCHAR},
+      </if>
+      <if test="askMatchesExpiredBid != null">
+        AskMatchesExpiredBid = #{askMatchesExpiredBid,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerNearbyMatch != null">
+        BuyerNearbyMatch = #{buyerNearbyMatch,jdbcType=VARCHAR},
+      </if>
+      <if test="bidAccepted != null">
+        BidAccepted = #{bidAccepted,jdbcType=VARCHAR},
+      </if>
+      <if test="IPOBidAlmost != null">
+        IPOBidAlmost = #{IPOBidAlmost,jdbcType=VARCHAR},
+      </if>
+      <if test="IPOBidOut != null">
+        IPOBidOut = #{IPOBidOut,jdbcType=VARCHAR},
+      </if>
+      <if test="IPOBidAccepted != null">
+        IPOBidAccepted = #{IPOBidAccepted,jdbcType=VARCHAR},
+      </if>
+      <if test="followingNewLowestAsk != null">
+        FollowingNewLowestAsk = #{followingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="askingNewHighestBid != null">
+        AskingNewHighestBid = #{askingNewHighestBid,jdbcType=VARCHAR},
+      </if>
+      <if test="askingNewHighestBidPercent != null">
+        AskingNewHighestBidPercent = #{askingNewHighestBidPercent,jdbcType=DOUBLE},
+      </if>
+      <if test="askingNewLowestAsk != null">
+        AskingNewLowestAsk = #{askingNewLowestAsk,jdbcType=VARCHAR},
+      </if>
+      <if test="askExpiring != null">
+        AskExpiring = #{askExpiring,jdbcType=VARCHAR},
+      </if>
+      <if test="askExpired != null">
+        AskExpired = #{askExpired,jdbcType=VARCHAR},
+      </if>
+      <if test="itemSold != null">
+        ItemSold = #{itemSold,jdbcType=VARCHAR},
+      </if>
+      <if test="firstSellerHasNotShipped != null">
+        FirstSellerHasNotShipped = #{firstSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="secondSellerHasNotShipped != null">
+        SecondSellerHasNotShipped = #{secondSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="thirdSellerHasNotShipped != null">
+        ThirdSellerHasNotShipped = #{thirdSellerHasNotShipped,jdbcType=VARCHAR},
+      </if>
+      <if test="productFeatures != null">
+        ProductFeatures = #{productFeatures,jdbcType=VARCHAR},
+      </if>
+      <if test="sneakerNews != null">
+        SneakerNews = #{sneakerNews,jdbcType=VARCHAR},
+      </if>
+      <if test="handbagNews != null">
+        HandbagNews = #{handbagNews,jdbcType=VARCHAR},
+      </if>
+      <if test="watchNews != null">
+        WatchNews = #{watchNews,jdbcType=VARCHAR},
+      </if>
+      <if test="streetwearNews != null">
+        StreetwearNews = #{streetwearNews,jdbcType=VARCHAR},
+      </if>
+      <if test="priceDropEmail != null">
+        PriceDropEmail = #{priceDropEmail,jdbcType=VARCHAR},
+      </if>
+      <if test="welcomeSeries != null">
+        WelcomeSeries = #{welcomeSeries,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusAccountNotification">
+    update bus_account_notification
+    set BiddingNewLowestAsk = #{biddingNewLowestAsk,jdbcType=VARCHAR},
+      BiddingNewHighestBid = #{biddingNewHighestBid,jdbcType=VARCHAR},
+      BidExpiring = #{bidExpiring,jdbcType=VARCHAR},
+      BidExpired = #{bidExpired,jdbcType=VARCHAR},
+      AskMatchesExpiredBid = #{askMatchesExpiredBid,jdbcType=VARCHAR},
+      BuyerNearbyMatch = #{buyerNearbyMatch,jdbcType=VARCHAR},
+      BidAccepted = #{bidAccepted,jdbcType=VARCHAR},
+      IPOBidAlmost = #{IPOBidAlmost,jdbcType=VARCHAR},
+      IPOBidOut = #{IPOBidOut,jdbcType=VARCHAR},
+      IPOBidAccepted = #{IPOBidAccepted,jdbcType=VARCHAR},
+      FollowingNewLowestAsk = #{followingNewLowestAsk,jdbcType=VARCHAR},
+      AskingNewHighestBid = #{askingNewHighestBid,jdbcType=VARCHAR},
+      AskingNewHighestBidPercent = #{askingNewHighestBidPercent,jdbcType=DOUBLE},
+      AskingNewLowestAsk = #{askingNewLowestAsk,jdbcType=VARCHAR},
+      AskExpiring = #{askExpiring,jdbcType=VARCHAR},
+      AskExpired = #{askExpired,jdbcType=VARCHAR},
+      ItemSold = #{itemSold,jdbcType=VARCHAR},
+      FirstSellerHasNotShipped = #{firstSellerHasNotShipped,jdbcType=VARCHAR},
+      SecondSellerHasNotShipped = #{secondSellerHasNotShipped,jdbcType=VARCHAR},
+      ThirdSellerHasNotShipped = #{thirdSellerHasNotShipped,jdbcType=VARCHAR},
+      ProductFeatures = #{productFeatures,jdbcType=VARCHAR},
+      SneakerNews = #{sneakerNews,jdbcType=VARCHAR},
+      HandbagNews = #{handbagNews,jdbcType=VARCHAR},
+      WatchNews = #{watchNews,jdbcType=VARCHAR},
+      StreetwearNews = #{streetwearNews,jdbcType=VARCHAR},
+      PriceDropEmail = #{priceDropEmail,jdbcType=VARCHAR},
+      WelcomeSeries = #{welcomeSeries,jdbcType=VARCHAR}
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </update>
+</mapper>

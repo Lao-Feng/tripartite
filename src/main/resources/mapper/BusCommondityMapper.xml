@@ -1,0 +1,1093 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusCommondityMapper">
+  <!-- 使用ehcache二级缓存 -->
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusCommondity">
+    <id column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="CategoryCode" jdbcType="INTEGER" property="categoryCode" />
+    <result column="BrandCode" jdbcType="INTEGER" property="brandCode" />
+    <result column="SeriesCode" jdbcType="INTEGER" property="seriesCode" />
+    <result column="CommodityName" jdbcType="VARCHAR" property="commodityName" />
+    <result column="BrandName" jdbcType="VARCHAR" property="brandName" />
+    <result column="Picture" jdbcType="VARCHAR" property="picture" />
+    <result column="Picture01" jdbcType="VARCHAR" property="picture01" />
+    <result column="Picture02" jdbcType="VARCHAR" property="picture02" />
+    <result column="Picture03" jdbcType="VARCHAR" property="picture03" />
+    <result column="Picture04" jdbcType="VARCHAR" property="picture04" />
+    <result column="Picture05" jdbcType="VARCHAR" property="picture05" />
+    <result column="Picture06" jdbcType="VARCHAR" property="picture06" />
+    <result column="ReferenceNumber" jdbcType="VARCHAR" property="referenceNumber" />
+    <result column="CaseSize" jdbcType="VARCHAR" property="caseSize" />
+    <result column="CaseMaterial" jdbcType="VARCHAR" property="caseMaterial" />
+    <result column="WatchBand" jdbcType="VARCHAR" property="watchBand" />
+    <result column="Movement" jdbcType="VARCHAR" property="movement" />
+    <result column="Dial" jdbcType="VARCHAR" property="dial" />
+    <result column="Dimensions" jdbcType="VARCHAR" property="dimensions" />
+    <result column="Material" jdbcType="VARCHAR" property="material" />
+    <result column="Retail" jdbcType="VARCHAR" property="retail" />
+    <result column="Color" jdbcType="VARCHAR" property="color" />
+    <result column="Size" jdbcType="VARCHAR" property="size" />
+    <result column="Season" jdbcType="VARCHAR" property="season" />
+    <result column="Style" jdbcType="VARCHAR" property="style" />
+    <result column="SizeType" jdbcType="VARCHAR" property="sizeType" />
+    <result column="Genders" jdbcType="VARCHAR" property="genders" />
+    <result column="ReleaseDate" jdbcType="DATE" property="releaseDate" />
+    <result column="Hardware" jdbcType="VARCHAR" property="hardware" />
+    <result column="Conditions" jdbcType="VARCHAR" property="conditions" />
+    <result column="ModifyTime" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="ModifyMan" jdbcType="INTEGER" property="modifyMan" />
+    <result column="LowestAsk" jdbcType="DOUBLE" property="lowestAsk" />
+    <result column="LowestAskSize" jdbcType="VARCHAR" property="lowestAskSize" />
+    <result column="LowestAskTime" jdbcType="TIMESTAMP" property="lowestAskTime" />
+    <result column="HighestBid" jdbcType="DOUBLE" property="highestBid" />
+    <result column="HighestBidSize" jdbcType="VARCHAR" property="highestBidSize" />
+    <result column="HighestBidTime" jdbcType="TIMESTAMP" property="highestBidTime" />
+    <result column="NewestAsk" jdbcType="DOUBLE" property="newestAsk" />
+    <result column="NewestAskSize" jdbcType="VARCHAR" property="newestAskSize" />
+    <result column="NewestAskTime" jdbcType="TIMESTAMP" property="newestAskTime" />
+    <result column="NewestBid" jdbcType="DOUBLE" property="newestBid" />
+    <result column="NewestBidSize" jdbcType="VARCHAR" property="newestBidSize" />
+    <result column="NewestBidTime" jdbcType="TIMESTAMP" property="newestBidTime" />
+    <result column="LastSale" jdbcType="DOUBLE" property="lastSale" />
+    <result column="LastSaleSize" jdbcType="VARCHAR" property="lastSaleSize" />
+    <result column="LastSaleTime" jdbcType="TIMESTAMP" property="lastSaleTime" />
+    <result column="LastOrderCode" jdbcType="INTEGER" property="lastOrderCode" />
+    <result column="Sales" jdbcType="INTEGER" property="sales" />
+    <result column="EstimatedShipping" jdbcType="DOUBLE" property="estimatedShipping" />
+    <result column="AuthenticationFee" jdbcType="DOUBLE" property="authenticationFee" />
+    <result column="BoxAndPapers" jdbcType="VARCHAR" property="boxAndPapers" />
+
+    <association column="CategoryCode" property="category"  select="getCategory"/>
+    <association column="ModifyMan" property="modifier"  select="getModifier"/>
+
+    <association column="CommondityCode" property="askList"  select="getAskList"/>
+    <association column="CommondityCode" property="bidList"  select="getBidList"/>
+    <association column="CommondityCode" property="saleList"  select="getSaleList"/>
+    <association column="CommondityCode" property="sizeList"  select="getSizeList"/>
+    <association column="CommodityName" property="relatedProducts"  select="getRelatedProducts"/>
+    <association column="CommondityCode" property="share"  select="com.teamax.alleyoop.dao.BusCommondityShareMapper.getShareInfoByCommodity"/>
+  </resultMap>
+  <resultMap id="CategoryResultMap" type="com.teamax.alleyoop.entity.DicCategory">
+    <id column="CategoryCode" jdbcType="INTEGER" property="categoryCode" />
+    <result column="CategoryName" jdbcType="VARCHAR" property="categoryName" />
+  </resultMap>
+  <resultMap id="SysUserResultMap" type="com.teamax.alleyoop.entity.SysUser">
+    <id column="UserId" jdbcType="INTEGER" property="userId" />
+    <result column="UserName" jdbcType="VARCHAR" property="userName" />
+    <result column="LoginName" jdbcType="VARCHAR" property="loginName" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+    <result column="RoleId" jdbcType="INTEGER" property="roleId" />
+    <result column="Tel" jdbcType="VARCHAR" property="tel" />
+    <result column="IDNumber" jdbcType="VARCHAR" property="IDNumber" />
+    <result column="Email" jdbcType="VARCHAR" property="email" />
+  </resultMap>
+  <resultMap id="AskResultMap" type="com.teamax.alleyoop.entity.BusAsk">
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="AskPrice" jdbcType="DOUBLE" property="askPrice" />
+    <result column="Available" jdbcType="INTEGER" property="available" />
+  </resultMap>
+  <resultMap id="BidResultMap" type="com.teamax.alleyoop.entity.BusBid">
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="BidPrice" jdbcType="DOUBLE" property="bidPrice" />
+    <result column="Available" jdbcType="INTEGER" property="available" />
+  </resultMap>
+  <resultMap id="OrderResultMap" type="com.teamax.alleyoop.entity.BusOrder">
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="CommondityPrice" jdbcType="DOUBLE" property="commondityPrice" />
+    <result column="OrderTime" jdbcType="TIMESTAMP" property="orderTime" />
+  </resultMap>
+  <resultMap id="CommoditySizeResultMap" type="com.teamax.alleyoop.entity.BusCommonditySize">
+    <id column="SizeCode" jdbcType="INTEGER" property="sizeCode" />
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="LowestAsk" jdbcType="DOUBLE" property="lowestAsk" />
+    <result column="HighestBid" jdbcType="DOUBLE" property="highestBid" />
+  </resultMap>
+  <select id="getCategory" parameterType="java.lang.Integer" resultMap="CategoryResultMap" useCache="true">
+    select * from dic_category where CategoryCode = #{CategoryCode}
+  </select>
+  <select id="getModifier" parameterType="java.lang.Integer" resultMap="SysUserResultMap" useCache="true">
+    select * from sys_user where UserId = #{UserId}
+  </select>
+  <select id="getAskList" parameterType="java.lang.Integer" resultMap="AskResultMap" useCache="true">
+    select SizeName,AskPrice,count(*) Available from bus_ask
+    where CommondityCode = #{CommondityCode} and Status = 0 and date_add(Asktime, interval AskExpiration day) &gt;= now()
+    group by SizeName,AskPrice
+    order by AskPrice
+  </select>
+  <select id="getBidList" parameterType="java.lang.Integer" resultMap="BidResultMap" useCache="true">
+    select SizeName,BidPrice,count(*) Available from bus_bid
+    where CommondityCode = #{CommondityCode} and Status = 0 and date_add(BidTime, interval BidExpiration day) &gt;= now()
+    group by SizeName,BidPrice
+    order by BidPrice DESC
+  </select>
+  <select id="getSaleList" parameterType="java.lang.Integer" resultMap="OrderResultMap" useCache="true">
+    select SizeName,CommondityPrice,OrderTime from bus_order where CommondityCode = #{CommondityCode}
+    order by OrderTime DESC
+  </select>
+  <select id="getSizeList" parameterType="java.lang.Integer" resultMap="CommoditySizeResultMap" useCache="true">
+    select SizeName,LowestAsk,HighestBid from bus_commondity_size where CommondityCode = #{CommondityCode}
+    order by SizeCode
+  </select>
+  <select id="getRelatedProducts" parameterType="java.lang.String" resultType="com.teamax.alleyoop.entity.Commodity" useCache="true">
+    select CommondityCode,CommodityName,LowestAsk,LastSale,levenshtein_ratio(#{CommodityName}, CommodityName) ratio,Picture from bus_commondity
+    where CommodityName != #{CommodityName}
+    order by ratio desc
+    limit 0, 5
+  </select>
+
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    CommondityCode, CategoryCode, BrandCode, SeriesCode, CommodityName, BrandName, Picture, 
+    Picture01, Picture02, Picture03, Picture04, Picture05, Picture06, ReferenceNumber, 
+    CaseSize, CaseMaterial, WatchBand, Movement, Dial, Dimensions, Material, Retail, 
+    Color, Size, Season, Style, SizeType, Genders, ReleaseDate, Hardware, Conditions, 
+    ModifyTime, ModifyMan, LowestAsk, LowestAskSize, LowestAskTime, HighestBid, HighestBidSize, 
+    HighestBidTime, NewestAsk, NewestAskSize, NewestAskTime, NewestBid, NewestBidSize, 
+    NewestBidTime, LastSale, LastSaleSize, LastSaleTime, LastOrderCode, Sales, EstimatedShipping, 
+    AuthenticationFee, BoxAndPapers
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusCommondityExample" resultMap="BaseResultMap" useCache="true">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_commondity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+
+  <select id="selectByFilter" parameterType="com.teamax.alleyoop.entity.BusCommondityExample" resultMap="BaseResultMap" useCache="true">
+    select
+    bc.*
+    from bus_commondity bc left join bus_commondity_sorting bcs on bc.CommondityCode = bcs.CommondityCode
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap" useCache="true">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_commondity
+    where CommondityCode = #{commondityCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_commondity
+    where CommondityCode = #{commondityCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusCommondityExample">
+    delete from bus_commondity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusCommondity">
+    insert into bus_commondity (CommondityCode, CategoryCode, BrandCode, 
+      SeriesCode, CommodityName, BrandName, 
+      Picture, Picture01, Picture02, 
+      Picture03, Picture04, Picture05, 
+      Picture06, ReferenceNumber, CaseSize, 
+      CaseMaterial, WatchBand, Movement, 
+      Dial, Dimensions, Material, 
+      Retail, Color, Size, 
+      Season, Style, SizeType, 
+      Genders, ReleaseDate, Hardware, 
+      Conditions, ModifyTime, ModifyMan, 
+      LowestAsk, LowestAskSize, LowestAskTime, 
+      HighestBid, HighestBidSize, HighestBidTime, 
+      NewestAsk, NewestAskSize, NewestAskTime, 
+      NewestBid, NewestBidSize, NewestBidTime, 
+      LastSale, LastSaleSize, LastSaleTime, 
+      LastOrderCode, Sales, EstimatedShipping, 
+      AuthenticationFee, BoxAndPapers)
+    values (#{commondityCode,jdbcType=INTEGER}, #{categoryCode,jdbcType=INTEGER}, #{brandCode,jdbcType=INTEGER}, 
+      #{seriesCode,jdbcType=INTEGER}, #{commodityName,jdbcType=VARCHAR}, #{brandName,jdbcType=VARCHAR}, 
+      #{picture,jdbcType=VARCHAR}, #{picture01,jdbcType=VARCHAR}, #{picture02,jdbcType=VARCHAR}, 
+      #{picture03,jdbcType=VARCHAR}, #{picture04,jdbcType=VARCHAR}, #{picture05,jdbcType=VARCHAR}, 
+      #{picture06,jdbcType=VARCHAR}, #{referenceNumber,jdbcType=VARCHAR}, #{caseSize,jdbcType=VARCHAR}, 
+      #{caseMaterial,jdbcType=VARCHAR}, #{watchBand,jdbcType=VARCHAR}, #{movement,jdbcType=VARCHAR}, 
+      #{dial,jdbcType=VARCHAR}, #{dimensions,jdbcType=VARCHAR}, #{material,jdbcType=VARCHAR}, 
+      #{retail,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR}, #{size,jdbcType=VARCHAR}, 
+      #{season,jdbcType=VARCHAR}, #{style,jdbcType=VARCHAR}, #{sizeType,jdbcType=VARCHAR}, 
+      #{genders,jdbcType=VARCHAR}, #{releaseDate,jdbcType=DATE}, #{hardware,jdbcType=VARCHAR}, 
+      #{conditions,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyMan,jdbcType=INTEGER}, 
+      #{lowestAsk,jdbcType=DOUBLE}, #{lowestAskSize,jdbcType=VARCHAR}, #{lowestAskTime,jdbcType=TIMESTAMP}, 
+      #{highestBid,jdbcType=DOUBLE}, #{highestBidSize,jdbcType=VARCHAR}, #{highestBidTime,jdbcType=TIMESTAMP}, 
+      #{newestAsk,jdbcType=DOUBLE}, #{newestAskSize,jdbcType=VARCHAR}, #{newestAskTime,jdbcType=TIMESTAMP}, 
+      #{newestBid,jdbcType=DOUBLE}, #{newestBidSize,jdbcType=VARCHAR}, #{newestBidTime,jdbcType=TIMESTAMP}, 
+      #{lastSale,jdbcType=DOUBLE}, #{lastSaleSize,jdbcType=VARCHAR}, #{lastSaleTime,jdbcType=TIMESTAMP}, 
+      #{lastOrderCode,jdbcType=INTEGER}, #{sales,jdbcType=INTEGER}, #{estimatedShipping,jdbcType=DOUBLE}, 
+      #{authenticationFee,jdbcType=DOUBLE}, #{boxAndPapers,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusCommondity">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="commondityCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_commondity
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="commondityCode != null">
+        CommondityCode,
+      </if>
+      <if test="categoryCode != null">
+        CategoryCode,
+      </if>
+      <if test="brandCode != null">
+        BrandCode,
+      </if>
+      <if test="seriesCode != null">
+        SeriesCode,
+      </if>
+      <if test="commodityName != null">
+        CommodityName,
+      </if>
+      <if test="brandName != null">
+        BrandName,
+      </if>
+      <if test="picture != null">
+        Picture,
+      </if>
+      <if test="picture01 != null">
+        Picture01,
+      </if>
+      <if test="picture02 != null">
+        Picture02,
+      </if>
+      <if test="picture03 != null">
+        Picture03,
+      </if>
+      <if test="picture04 != null">
+        Picture04,
+      </if>
+      <if test="picture05 != null">
+        Picture05,
+      </if>
+      <if test="picture06 != null">
+        Picture06,
+      </if>
+      <if test="referenceNumber != null">
+        ReferenceNumber,
+      </if>
+      <if test="caseSize != null">
+        CaseSize,
+      </if>
+      <if test="caseMaterial != null">
+        CaseMaterial,
+      </if>
+      <if test="watchBand != null">
+        WatchBand,
+      </if>
+      <if test="movement != null">
+        Movement,
+      </if>
+      <if test="dial != null">
+        Dial,
+      </if>
+      <if test="dimensions != null">
+        Dimensions,
+      </if>
+      <if test="material != null">
+        Material,
+      </if>
+      <if test="retail != null">
+        Retail,
+      </if>
+      <if test="color != null">
+        Color,
+      </if>
+      <if test="size != null">
+        Size,
+      </if>
+      <if test="season != null">
+        Season,
+      </if>
+      <if test="style != null">
+        Style,
+      </if>
+      <if test="sizeType != null">
+        SizeType,
+      </if>
+      <if test="genders != null">
+        Genders,
+      </if>
+      <if test="releaseDate != null">
+        ReleaseDate,
+      </if>
+      <if test="hardware != null">
+        Hardware,
+      </if>
+      <if test="conditions != null">
+        Conditions,
+      </if>
+      <if test="modifyTime != null">
+        ModifyTime,
+      </if>
+      <if test="modifyMan != null">
+        ModifyMan,
+      </if>
+      <if test="lowestAsk != null">
+        LowestAsk,
+      </if>
+      <if test="lowestAskSize != null">
+        LowestAskSize,
+      </if>
+      <if test="lowestAskTime != null">
+        LowestAskTime,
+      </if>
+      <if test="highestBid != null">
+        HighestBid,
+      </if>
+      <if test="highestBidSize != null">
+        HighestBidSize,
+      </if>
+      <if test="highestBidTime != null">
+        HighestBidTime,
+      </if>
+      <if test="newestAsk != null">
+        NewestAsk,
+      </if>
+      <if test="newestAskSize != null">
+        NewestAskSize,
+      </if>
+      <if test="newestAskTime != null">
+        NewestAskTime,
+      </if>
+      <if test="newestBid != null">
+        NewestBid,
+      </if>
+      <if test="newestBidSize != null">
+        NewestBidSize,
+      </if>
+      <if test="newestBidTime != null">
+        NewestBidTime,
+      </if>
+      <if test="lastSale != null">
+        LastSale,
+      </if>
+      <if test="lastSaleSize != null">
+        LastSaleSize,
+      </if>
+      <if test="lastSaleTime != null">
+        LastSaleTime,
+      </if>
+      <if test="lastOrderCode != null">
+        LastOrderCode,
+      </if>
+      <if test="sales != null">
+        Sales,
+      </if>
+      <if test="estimatedShipping != null">
+        EstimatedShipping,
+      </if>
+      <if test="authenticationFee != null">
+        AuthenticationFee,
+      </if>
+      <if test="boxAndPapers != null">
+        BoxAndPapers,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="commondityCode != null">
+        #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="categoryCode != null">
+        #{categoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="brandCode != null">
+        #{brandCode,jdbcType=INTEGER},
+      </if>
+      <if test="seriesCode != null">
+        #{seriesCode,jdbcType=INTEGER},
+      </if>
+      <if test="commodityName != null">
+        #{commodityName,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null">
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="picture01 != null">
+        #{picture01,jdbcType=VARCHAR},
+      </if>
+      <if test="picture02 != null">
+        #{picture02,jdbcType=VARCHAR},
+      </if>
+      <if test="picture03 != null">
+        #{picture03,jdbcType=VARCHAR},
+      </if>
+      <if test="picture04 != null">
+        #{picture04,jdbcType=VARCHAR},
+      </if>
+      <if test="picture05 != null">
+        #{picture05,jdbcType=VARCHAR},
+      </if>
+      <if test="picture06 != null">
+        #{picture06,jdbcType=VARCHAR},
+      </if>
+      <if test="referenceNumber != null">
+        #{referenceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="caseSize != null">
+        #{caseSize,jdbcType=VARCHAR},
+      </if>
+      <if test="caseMaterial != null">
+        #{caseMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="watchBand != null">
+        #{watchBand,jdbcType=VARCHAR},
+      </if>
+      <if test="movement != null">
+        #{movement,jdbcType=VARCHAR},
+      </if>
+      <if test="dial != null">
+        #{dial,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensions != null">
+        #{dimensions,jdbcType=VARCHAR},
+      </if>
+      <if test="material != null">
+        #{material,jdbcType=VARCHAR},
+      </if>
+      <if test="retail != null">
+        #{retail,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null">
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null">
+        #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null">
+        #{style,jdbcType=VARCHAR},
+      </if>
+      <if test="sizeType != null">
+        #{sizeType,jdbcType=VARCHAR},
+      </if>
+      <if test="genders != null">
+        #{genders,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null">
+        #{releaseDate,jdbcType=DATE},
+      </if>
+      <if test="hardware != null">
+        #{hardware,jdbcType=VARCHAR},
+      </if>
+      <if test="conditions != null">
+        #{conditions,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyMan != null">
+        #{modifyMan,jdbcType=INTEGER},
+      </if>
+      <if test="lowestAsk != null">
+        #{lowestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="lowestAskSize != null">
+        #{lowestAskSize,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestAskTime != null">
+        #{lowestAskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="highestBid != null">
+        #{highestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="highestBidSize != null">
+        #{highestBidSize,jdbcType=VARCHAR},
+      </if>
+      <if test="highestBidTime != null">
+        #{highestBidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newestAsk != null">
+        #{newestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="newestAskSize != null">
+        #{newestAskSize,jdbcType=VARCHAR},
+      </if>
+      <if test="newestAskTime != null">
+        #{newestAskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newestBid != null">
+        #{newestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="newestBidSize != null">
+        #{newestBidSize,jdbcType=VARCHAR},
+      </if>
+      <if test="newestBidTime != null">
+        #{newestBidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastSale != null">
+        #{lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSaleSize != null">
+        #{lastSaleSize,jdbcType=VARCHAR},
+      </if>
+      <if test="lastSaleTime != null">
+        #{lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOrderCode != null">
+        #{lastOrderCode,jdbcType=INTEGER},
+      </if>
+      <if test="sales != null">
+        #{sales,jdbcType=INTEGER},
+      </if>
+      <if test="estimatedShipping != null">
+        #{estimatedShipping,jdbcType=DOUBLE},
+      </if>
+      <if test="authenticationFee != null">
+        #{authenticationFee,jdbcType=DOUBLE},
+      </if>
+      <if test="boxAndPapers != null">
+        #{boxAndPapers,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusCommondityExample" resultType="java.lang.Long">
+    select count(*) from bus_commondity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_commondity
+    <set>
+      <if test="record.commondityCode != null">
+        CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.categoryCode != null">
+        CategoryCode = #{record.categoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.brandCode != null">
+        BrandCode = #{record.brandCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.seriesCode != null">
+        SeriesCode = #{record.seriesCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.commodityName != null">
+        CommodityName = #{record.commodityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brandName != null">
+        BrandName = #{record.brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture != null">
+        Picture = #{record.picture,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture01 != null">
+        Picture01 = #{record.picture01,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture02 != null">
+        Picture02 = #{record.picture02,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture03 != null">
+        Picture03 = #{record.picture03,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture04 != null">
+        Picture04 = #{record.picture04,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture05 != null">
+        Picture05 = #{record.picture05,jdbcType=VARCHAR},
+      </if>
+      <if test="record.picture06 != null">
+        Picture06 = #{record.picture06,jdbcType=VARCHAR},
+      </if>
+      <if test="record.referenceNumber != null">
+        ReferenceNumber = #{record.referenceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.caseSize != null">
+        CaseSize = #{record.caseSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.caseMaterial != null">
+        CaseMaterial = #{record.caseMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="record.watchBand != null">
+        WatchBand = #{record.watchBand,jdbcType=VARCHAR},
+      </if>
+      <if test="record.movement != null">
+        Movement = #{record.movement,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dial != null">
+        Dial = #{record.dial,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dimensions != null">
+        Dimensions = #{record.dimensions,jdbcType=VARCHAR},
+      </if>
+      <if test="record.material != null">
+        Material = #{record.material,jdbcType=VARCHAR},
+      </if>
+      <if test="record.retail != null">
+        Retail = #{record.retail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.color != null">
+        Color = #{record.color,jdbcType=VARCHAR},
+      </if>
+      <if test="record.size != null">
+        Size = #{record.size,jdbcType=VARCHAR},
+      </if>
+      <if test="record.season != null">
+        Season = #{record.season,jdbcType=VARCHAR},
+      </if>
+      <if test="record.style != null">
+        Style = #{record.style,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sizeType != null">
+        SizeType = #{record.sizeType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.genders != null">
+        Genders = #{record.genders,jdbcType=VARCHAR},
+      </if>
+      <if test="record.releaseDate != null">
+        ReleaseDate = #{record.releaseDate,jdbcType=DATE},
+      </if>
+      <if test="record.hardware != null">
+        Hardware = #{record.hardware,jdbcType=VARCHAR},
+      </if>
+      <if test="record.conditions != null">
+        Conditions = #{record.conditions,jdbcType=VARCHAR},
+      </if>
+      <if test="record.modifyTime != null">
+        ModifyTime = #{record.modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.modifyMan != null">
+        ModifyMan = #{record.modifyMan,jdbcType=INTEGER},
+      </if>
+      <if test="record.lowestAsk != null">
+        LowestAsk = #{record.lowestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="record.lowestAskSize != null">
+        LowestAskSize = #{record.lowestAskSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lowestAskTime != null">
+        LowestAskTime = #{record.lowestAskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.highestBid != null">
+        HighestBid = #{record.highestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="record.highestBidSize != null">
+        HighestBidSize = #{record.highestBidSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.highestBidTime != null">
+        HighestBidTime = #{record.highestBidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.newestAsk != null">
+        NewestAsk = #{record.newestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="record.newestAskSize != null">
+        NewestAskSize = #{record.newestAskSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newestAskTime != null">
+        NewestAskTime = #{record.newestAskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.newestBid != null">
+        NewestBid = #{record.newestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="record.newestBidSize != null">
+        NewestBidSize = #{record.newestBidSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newestBidTime != null">
+        NewestBidTime = #{record.newestBidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastSale != null">
+        LastSale = #{record.lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="record.lastSaleSize != null">
+        LastSaleSize = #{record.lastSaleSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastSaleTime != null">
+        LastSaleTime = #{record.lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.lastOrderCode != null">
+        LastOrderCode = #{record.lastOrderCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.sales != null">
+        Sales = #{record.sales,jdbcType=INTEGER},
+      </if>
+      <if test="record.estimatedShipping != null">
+        EstimatedShipping = #{record.estimatedShipping,jdbcType=DOUBLE},
+      </if>
+      <if test="record.authenticationFee != null">
+        AuthenticationFee = #{record.authenticationFee,jdbcType=DOUBLE},
+      </if>
+      <if test="record.boxAndPapers != null">
+        BoxAndPapers = #{record.boxAndPapers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_commondity
+    set CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      CategoryCode = #{record.categoryCode,jdbcType=INTEGER},
+      BrandCode = #{record.brandCode,jdbcType=INTEGER},
+      SeriesCode = #{record.seriesCode,jdbcType=INTEGER},
+      CommodityName = #{record.commodityName,jdbcType=VARCHAR},
+      BrandName = #{record.brandName,jdbcType=VARCHAR},
+      Picture = #{record.picture,jdbcType=VARCHAR},
+      Picture01 = #{record.picture01,jdbcType=VARCHAR},
+      Picture02 = #{record.picture02,jdbcType=VARCHAR},
+      Picture03 = #{record.picture03,jdbcType=VARCHAR},
+      Picture04 = #{record.picture04,jdbcType=VARCHAR},
+      Picture05 = #{record.picture05,jdbcType=VARCHAR},
+      Picture06 = #{record.picture06,jdbcType=VARCHAR},
+      ReferenceNumber = #{record.referenceNumber,jdbcType=VARCHAR},
+      CaseSize = #{record.caseSize,jdbcType=VARCHAR},
+      CaseMaterial = #{record.caseMaterial,jdbcType=VARCHAR},
+      WatchBand = #{record.watchBand,jdbcType=VARCHAR},
+      Movement = #{record.movement,jdbcType=VARCHAR},
+      Dial = #{record.dial,jdbcType=VARCHAR},
+      Dimensions = #{record.dimensions,jdbcType=VARCHAR},
+      Material = #{record.material,jdbcType=VARCHAR},
+      Retail = #{record.retail,jdbcType=VARCHAR},
+      Color = #{record.color,jdbcType=VARCHAR},
+      Size = #{record.size,jdbcType=VARCHAR},
+      Season = #{record.season,jdbcType=VARCHAR},
+      Style = #{record.style,jdbcType=VARCHAR},
+      SizeType = #{record.sizeType,jdbcType=VARCHAR},
+      Genders = #{record.genders,jdbcType=VARCHAR},
+      ReleaseDate = #{record.releaseDate,jdbcType=DATE},
+      Hardware = #{record.hardware,jdbcType=VARCHAR},
+      Conditions = #{record.conditions,jdbcType=VARCHAR},
+      ModifyTime = #{record.modifyTime,jdbcType=TIMESTAMP},
+      ModifyMan = #{record.modifyMan,jdbcType=INTEGER},
+      LowestAsk = #{record.lowestAsk,jdbcType=DOUBLE},
+      LowestAskSize = #{record.lowestAskSize,jdbcType=VARCHAR},
+      LowestAskTime = #{record.lowestAskTime,jdbcType=TIMESTAMP},
+      HighestBid = #{record.highestBid,jdbcType=DOUBLE},
+      HighestBidSize = #{record.highestBidSize,jdbcType=VARCHAR},
+      HighestBidTime = #{record.highestBidTime,jdbcType=TIMESTAMP},
+      NewestAsk = #{record.newestAsk,jdbcType=DOUBLE},
+      NewestAskSize = #{record.newestAskSize,jdbcType=VARCHAR},
+      NewestAskTime = #{record.newestAskTime,jdbcType=TIMESTAMP},
+      NewestBid = #{record.newestBid,jdbcType=DOUBLE},
+      NewestBidSize = #{record.newestBidSize,jdbcType=VARCHAR},
+      NewestBidTime = #{record.newestBidTime,jdbcType=TIMESTAMP},
+      LastSale = #{record.lastSale,jdbcType=DOUBLE},
+      LastSaleSize = #{record.lastSaleSize,jdbcType=VARCHAR},
+      LastSaleTime = #{record.lastSaleTime,jdbcType=TIMESTAMP},
+      LastOrderCode = #{record.lastOrderCode,jdbcType=INTEGER},
+      Sales = #{record.sales,jdbcType=INTEGER},
+      EstimatedShipping = #{record.estimatedShipping,jdbcType=DOUBLE},
+      AuthenticationFee = #{record.authenticationFee,jdbcType=DOUBLE},
+      BoxAndPapers = #{record.boxAndPapers,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusCommondity">
+    update bus_commondity
+    <set>
+      <if test="categoryCode != null">
+        CategoryCode = #{categoryCode,jdbcType=INTEGER},
+      </if>
+      <if test="brandCode != null">
+        BrandCode = #{brandCode,jdbcType=INTEGER},
+      </if>
+      <if test="seriesCode != null">
+        SeriesCode = #{seriesCode,jdbcType=INTEGER},
+      </if>
+      <if test="commodityName != null">
+        CommodityName = #{commodityName,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null">
+        BrandName = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="picture != null">
+        Picture = #{picture,jdbcType=VARCHAR},
+      </if>
+      <if test="picture01 != null">
+        Picture01 = #{picture01,jdbcType=VARCHAR},
+      </if>
+      <if test="picture02 != null">
+        Picture02 = #{picture02,jdbcType=VARCHAR},
+      </if>
+      <if test="picture03 != null">
+        Picture03 = #{picture03,jdbcType=VARCHAR},
+      </if>
+      <if test="picture04 != null">
+        Picture04 = #{picture04,jdbcType=VARCHAR},
+      </if>
+      <if test="picture05 != null">
+        Picture05 = #{picture05,jdbcType=VARCHAR},
+      </if>
+      <if test="picture06 != null">
+        Picture06 = #{picture06,jdbcType=VARCHAR},
+      </if>
+      <if test="referenceNumber != null">
+        ReferenceNumber = #{referenceNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="caseSize != null">
+        CaseSize = #{caseSize,jdbcType=VARCHAR},
+      </if>
+      <if test="caseMaterial != null">
+        CaseMaterial = #{caseMaterial,jdbcType=VARCHAR},
+      </if>
+      <if test="watchBand != null">
+        WatchBand = #{watchBand,jdbcType=VARCHAR},
+      </if>
+      <if test="movement != null">
+        Movement = #{movement,jdbcType=VARCHAR},
+      </if>
+      <if test="dial != null">
+        Dial = #{dial,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensions != null">
+        Dimensions = #{dimensions,jdbcType=VARCHAR},
+      </if>
+      <if test="material != null">
+        Material = #{material,jdbcType=VARCHAR},
+      </if>
+      <if test="retail != null">
+        Retail = #{retail,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null">
+        Color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="size != null">
+        Size = #{size,jdbcType=VARCHAR},
+      </if>
+      <if test="season != null">
+        Season = #{season,jdbcType=VARCHAR},
+      </if>
+      <if test="style != null">
+        Style = #{style,jdbcType=VARCHAR},
+      </if>
+      <if test="sizeType != null">
+        SizeType = #{sizeType,jdbcType=VARCHAR},
+      </if>
+      <if test="genders != null">
+        Genders = #{genders,jdbcType=VARCHAR},
+      </if>
+      <if test="releaseDate != null">
+        ReleaseDate = #{releaseDate,jdbcType=DATE},
+      </if>
+      <if test="hardware != null">
+        Hardware = #{hardware,jdbcType=VARCHAR},
+      </if>
+      <if test="conditions != null">
+        Conditions = #{conditions,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        ModifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyMan != null">
+        ModifyMan = #{modifyMan,jdbcType=INTEGER},
+      </if>
+      <if test="lowestAsk != null">
+        LowestAsk = #{lowestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="lowestAskSize != null">
+        LowestAskSize = #{lowestAskSize,jdbcType=VARCHAR},
+      </if>
+      <if test="lowestAskTime != null">
+        LowestAskTime = #{lowestAskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="highestBid != null">
+        HighestBid = #{highestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="highestBidSize != null">
+        HighestBidSize = #{highestBidSize,jdbcType=VARCHAR},
+      </if>
+      <if test="highestBidTime != null">
+        HighestBidTime = #{highestBidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newestAsk != null">
+        NewestAsk = #{newestAsk,jdbcType=DOUBLE},
+      </if>
+      <if test="newestAskSize != null">
+        NewestAskSize = #{newestAskSize,jdbcType=VARCHAR},
+      </if>
+      <if test="newestAskTime != null">
+        NewestAskTime = #{newestAskTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="newestBid != null">
+        NewestBid = #{newestBid,jdbcType=DOUBLE},
+      </if>
+      <if test="newestBidSize != null">
+        NewestBidSize = #{newestBidSize,jdbcType=VARCHAR},
+      </if>
+      <if test="newestBidTime != null">
+        NewestBidTime = #{newestBidTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastSale != null">
+        LastSale = #{lastSale,jdbcType=DOUBLE},
+      </if>
+      <if test="lastSaleSize != null">
+        LastSaleSize = #{lastSaleSize,jdbcType=VARCHAR},
+      </if>
+      <if test="lastSaleTime != null">
+        LastSaleTime = #{lastSaleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastOrderCode != null">
+        LastOrderCode = #{lastOrderCode,jdbcType=INTEGER},
+      </if>
+      <if test="sales != null">
+        Sales = #{sales,jdbcType=INTEGER},
+      </if>
+      <if test="estimatedShipping != null">
+        EstimatedShipping = #{estimatedShipping,jdbcType=DOUBLE},
+      </if>
+      <if test="authenticationFee != null">
+        AuthenticationFee = #{authenticationFee,jdbcType=DOUBLE},
+      </if>
+      <if test="boxAndPapers != null">
+        BoxAndPapers = #{boxAndPapers,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CommondityCode = #{commondityCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusCommondity">
+    update bus_commondity
+    set CategoryCode = #{categoryCode,jdbcType=INTEGER},
+      BrandCode = #{brandCode,jdbcType=INTEGER},
+      SeriesCode = #{seriesCode,jdbcType=INTEGER},
+      CommodityName = #{commodityName,jdbcType=VARCHAR},
+      BrandName = #{brandName,jdbcType=VARCHAR},
+      Picture = #{picture,jdbcType=VARCHAR},
+      Picture01 = #{picture01,jdbcType=VARCHAR},
+      Picture02 = #{picture02,jdbcType=VARCHAR},
+      Picture03 = #{picture03,jdbcType=VARCHAR},
+      Picture04 = #{picture04,jdbcType=VARCHAR},
+      Picture05 = #{picture05,jdbcType=VARCHAR},
+      Picture06 = #{picture06,jdbcType=VARCHAR},
+      ReferenceNumber = #{referenceNumber,jdbcType=VARCHAR},
+      CaseSize = #{caseSize,jdbcType=VARCHAR},
+      CaseMaterial = #{caseMaterial,jdbcType=VARCHAR},
+      WatchBand = #{watchBand,jdbcType=VARCHAR},
+      Movement = #{movement,jdbcType=VARCHAR},
+      Dial = #{dial,jdbcType=VARCHAR},
+      Dimensions = #{dimensions,jdbcType=VARCHAR},
+      Material = #{material,jdbcType=VARCHAR},
+      Retail = #{retail,jdbcType=VARCHAR},
+      Color = #{color,jdbcType=VARCHAR},
+      Size = #{size,jdbcType=VARCHAR},
+      Season = #{season,jdbcType=VARCHAR},
+      Style = #{style,jdbcType=VARCHAR},
+      SizeType = #{sizeType,jdbcType=VARCHAR},
+      Genders = #{genders,jdbcType=VARCHAR},
+      ReleaseDate = #{releaseDate,jdbcType=DATE},
+      Hardware = #{hardware,jdbcType=VARCHAR},
+      Conditions = #{conditions,jdbcType=VARCHAR},
+      ModifyTime = #{modifyTime,jdbcType=TIMESTAMP},
+      ModifyMan = #{modifyMan,jdbcType=INTEGER},
+      LowestAsk = #{lowestAsk,jdbcType=DOUBLE},
+      LowestAskSize = #{lowestAskSize,jdbcType=VARCHAR},
+      LowestAskTime = #{lowestAskTime,jdbcType=TIMESTAMP},
+      HighestBid = #{highestBid,jdbcType=DOUBLE},
+      HighestBidSize = #{highestBidSize,jdbcType=VARCHAR},
+      HighestBidTime = #{highestBidTime,jdbcType=TIMESTAMP},
+      NewestAsk = #{newestAsk,jdbcType=DOUBLE},
+      NewestAskSize = #{newestAskSize,jdbcType=VARCHAR},
+      NewestAskTime = #{newestAskTime,jdbcType=TIMESTAMP},
+      NewestBid = #{newestBid,jdbcType=DOUBLE},
+      NewestBidSize = #{newestBidSize,jdbcType=VARCHAR},
+      NewestBidTime = #{newestBidTime,jdbcType=TIMESTAMP},
+      LastSale = #{lastSale,jdbcType=DOUBLE},
+      LastSaleSize = #{lastSaleSize,jdbcType=VARCHAR},
+      LastSaleTime = #{lastSaleTime,jdbcType=TIMESTAMP},
+      LastOrderCode = #{lastOrderCode,jdbcType=INTEGER},
+      Sales = #{sales,jdbcType=INTEGER},
+      EstimatedShipping = #{estimatedShipping,jdbcType=DOUBLE},
+      AuthenticationFee = #{authenticationFee,jdbcType=DOUBLE},
+      BoxAndPapers = #{boxAndPapers,jdbcType=VARCHAR}
+    where CommondityCode = #{commondityCode,jdbcType=INTEGER}
+  </update>
+
+  <select id="getMostPopularCommodity" parameterType="java.lang.Integer" resultMap="BaseResultMap" useCache="true">
+    select * from bus_commondity where CategoryCode = #{category} order by sales desc limit 0,4
+  </select>
+  <select id="getNewLowestAsks" parameterType="java.lang.Integer" resultMap="BaseResultMap" useCache="true">
+    select * from bus_commondity where CategoryCode = #{category} and NewestAskTime IS NOT NULL order by NewestAskTime desc limit 0,4
+  </select>
+  <select id="getNewHighestBids" parameterType="java.lang.Integer" resultMap="BaseResultMap" useCache="true">
+    select * from bus_commondity where CategoryCode = #{category} and NewestBidTime IS NOT NULL order by NewestBidTime desc limit 0,4
+  </select>
+</mapper>

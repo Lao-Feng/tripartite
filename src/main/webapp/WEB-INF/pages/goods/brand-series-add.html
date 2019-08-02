@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <head>
+        <link href="../../../css/tree.css" rel="stylesheet"/>
+        <script src="../../../js/jquery-2.2.0.min.js"></script>
+        <script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+    </head>
+<body>
+    <form id="brandSeriesForm" target="submitFrame">
+        <input type="hidden" name="seriesCode">
+        <div class="div_form">
+            <div>
+                <label class="form_label">品牌名称<span>*</span></label>
+                <input type="hidden" name="brandCode" th:value="${brand.brandCode}">
+                <input type="text" class="form_input" th:value="${brand.brandName}" disabled>
+            </div>
+            <div>
+                <label class="form_label">系列名称<span>*</span></label>
+                <input type="text" class="form_input" name="seriesName" >
+            </div>
+        </div>
+        <div style="clear: both"></div>
+        <div class="notice_bot">
+            <div class="l_left"><input type="checkbox" checked="checked"/>保存并关闭窗口</div>
+            <div class="r_right but_p">
+                <button class="but_save">保存</button>
+                <button class="but_close">关闭</button>
+            </div>
+        </div>
+    </form>
+    <iframe id="submitFrame" style="display: none;width:0; height:0" name="submitFrame"  src="about:blank"></iframe>
+</body>
+<script>
+    $(function () {
+        //保存
+        $(".but_save").on("click",function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/dic/series/addOrUpdate.shtm",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data: $("#brandSeriesForm").serialize(),
+                success: function (result) {
+                    parent.layer.msg(result.msg);
+                    if(result.code==200){
+                        $("input[name='seriesCode']").val(result.series.seriesCode);
+                        parent.$("#table").bootstrapTable('refresh');
+                        if($(".notice_bot").find("input[type='checkbox']")[0].checked){
+                            $(".but_close").click();
+                        }
+                    }
+                }
+            });
+        });
+        //关闭按钮
+        $(".but_close").on("click",function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusAccountPaymentMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusAccountPayment">
+    <id column="PaymentCode" jdbcType="INTEGER" property="paymentCode" />
+    <result column="PaymentType" jdbcType="INTEGER" property="paymentType" />
+    <result column="CardNumber" jdbcType="VARCHAR" property="cardNumber" />
+    <result column="Expires" jdbcType="VARCHAR" property="expires" />
+    <result column="CVV" jdbcType="VARCHAR" property="CVV" />
+    <result column="Paypal" jdbcType="VARCHAR" property="paypal" />
+    <result column="Weixin" jdbcType="VARCHAR" property="weixin" />
+    <result column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="BillingAddress" jdbcType="INTEGER" property="billingAddress" />
+    <result column="DefaultUsed" jdbcType="INTEGER" property="defaultUsed" />
+    <association column="BillingAddress" property="bAddress" select="com.teamax.alleyoop.dao.BusAccountAddressMapper.selectByPrimaryKey"></association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    PaymentCode, PaymentType, CardNumber, Expires, CVV, Paypal, Weixin, AccountCode, 
+    BillingAddress, DefaultUsed
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusAccountPaymentExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_account_payment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_account_payment
+    where PaymentCode = #{paymentCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_account_payment
+    where PaymentCode = #{paymentCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusAccountPaymentExample">
+    delete from bus_account_payment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusAccountPayment">
+    insert into bus_account_payment (PaymentCode, PaymentType, CardNumber, 
+      Expires, CVV, Paypal, 
+      Weixin, AccountCode, BillingAddress, 
+      DefaultUsed)
+    values (#{paymentCode,jdbcType=INTEGER}, #{paymentType,jdbcType=INTEGER}, #{cardNumber,jdbcType=VARCHAR}, 
+      #{expires,jdbcType=VARCHAR}, #{CVV,jdbcType=VARCHAR}, #{paypal,jdbcType=VARCHAR}, 
+      #{weixin,jdbcType=VARCHAR}, #{accountCode,jdbcType=INTEGER}, #{billingAddress,jdbcType=INTEGER}, 
+      #{defaultUsed,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusAccountPayment">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="paymentCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_account_payment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="paymentCode != null">
+        PaymentCode,
+      </if>
+      <if test="paymentType != null">
+        PaymentType,
+      </if>
+      <if test="cardNumber != null">
+        CardNumber,
+      </if>
+      <if test="expires != null">
+        Expires,
+      </if>
+      <if test="CVV != null">
+        CVV,
+      </if>
+      <if test="paypal != null">
+        Paypal,
+      </if>
+      <if test="weixin != null">
+        Weixin,
+      </if>
+      <if test="accountCode != null">
+        AccountCode,
+      </if>
+      <if test="billingAddress != null">
+        BillingAddress,
+      </if>
+      <if test="defaultUsed != null">
+        DefaultUsed,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="paymentCode != null">
+        #{paymentCode,jdbcType=INTEGER},
+      </if>
+      <if test="paymentType != null">
+        #{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="cardNumber != null">
+        #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="expires != null">
+        #{expires,jdbcType=VARCHAR},
+      </if>
+      <if test="CVV != null">
+        #{CVV,jdbcType=VARCHAR},
+      </if>
+      <if test="paypal != null">
+        #{paypal,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null">
+        #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null">
+        #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="billingAddress != null">
+        #{billingAddress,jdbcType=INTEGER},
+      </if>
+      <if test="defaultUsed != null">
+        #{defaultUsed,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusAccountPaymentExample" resultType="java.lang.Long">
+    select count(*) from bus_account_payment
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_account_payment
+    <set>
+      <if test="record.paymentCode != null">
+        PaymentCode = #{record.paymentCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.paymentType != null">
+        PaymentType = #{record.paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="record.cardNumber != null">
+        CardNumber = #{record.cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expires != null">
+        Expires = #{record.expires,jdbcType=VARCHAR},
+      </if>
+      <if test="record.CVV != null">
+        CVV = #{record.CVV,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paypal != null">
+        Paypal = #{record.paypal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.weixin != null">
+        Weixin = #{record.weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountCode != null">
+        AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.billingAddress != null">
+        BillingAddress = #{record.billingAddress,jdbcType=INTEGER},
+      </if>
+      <if test="record.defaultUsed != null">
+        DefaultUsed = #{record.defaultUsed,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_account_payment
+    set PaymentCode = #{record.paymentCode,jdbcType=INTEGER},
+      PaymentType = #{record.paymentType,jdbcType=INTEGER},
+      CardNumber = #{record.cardNumber,jdbcType=VARCHAR},
+      Expires = #{record.expires,jdbcType=VARCHAR},
+      CVV = #{record.CVV,jdbcType=VARCHAR},
+      Paypal = #{record.paypal,jdbcType=VARCHAR},
+      Weixin = #{record.weixin,jdbcType=VARCHAR},
+      AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      BillingAddress = #{record.billingAddress,jdbcType=INTEGER},
+      DefaultUsed = #{record.defaultUsed,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusAccountPayment">
+    update bus_account_payment
+    <set>
+      <if test="paymentType != null">
+        PaymentType = #{paymentType,jdbcType=INTEGER},
+      </if>
+      <if test="cardNumber != null">
+        CardNumber = #{cardNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="expires != null">
+        Expires = #{expires,jdbcType=VARCHAR},
+      </if>
+      <if test="CVV != null">
+        CVV = #{CVV,jdbcType=VARCHAR},
+      </if>
+      <if test="paypal != null">
+        Paypal = #{paypal,jdbcType=VARCHAR},
+      </if>
+      <if test="weixin != null">
+        Weixin = #{weixin,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCode != null">
+        AccountCode = #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="billingAddress != null">
+        BillingAddress = #{billingAddress,jdbcType=INTEGER},
+      </if>
+      <if test="defaultUsed != null">
+        DefaultUsed = #{defaultUsed,jdbcType=INTEGER},
+      </if>
+    </set>
+    where PaymentCode = #{paymentCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusAccountPayment">
+    update bus_account_payment
+    set PaymentType = #{paymentType,jdbcType=INTEGER},
+      CardNumber = #{cardNumber,jdbcType=VARCHAR},
+      Expires = #{expires,jdbcType=VARCHAR},
+      CVV = #{CVV,jdbcType=VARCHAR},
+      Paypal = #{paypal,jdbcType=VARCHAR},
+      Weixin = #{weixin,jdbcType=VARCHAR},
+      AccountCode = #{accountCode,jdbcType=INTEGER},
+      BillingAddress = #{billingAddress,jdbcType=INTEGER},
+      DefaultUsed = #{defaultUsed,jdbcType=INTEGER}
+    where PaymentCode = #{paymentCode,jdbcType=INTEGER}
+  </update>
+</mapper>

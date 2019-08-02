@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品品牌管理</title>
+    <link href="../../../plugin/bootstrap.3.3.7/css/bootstrap.3.3.7.css" rel="stylesheet">
+    <link href="../../../plugin/bootstrap.3.3.7/css/bootstrap-theme.css" rel="stylesheet">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bootstrap.3.3.7/css/jquery.treegrid.min.css" rel="stylesheet">
+    <link href="../../css/brand.css" rel="stylesheet" type="text/css">
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+<div class="mould-main">
+    <div class="mould-top">
+        <p>商品品牌管理界面主要对品牌信息进行新增、查询、修改等操作。</p>
+    </div>
+    <div class="mould-middle">
+        <div class="mould-content">
+            <div class="mould-search">
+                <div class="mould-items">
+                    <div class="mould-item">
+                        <div class="item-text"> 类别</div>
+                        <div class="item-input">
+                            <select id="CategoryCode">
+                                <option value="">全部</option>
+                                <option value="1">球鞋</option>
+                                <option value="2">服装</option>
+                                <option value="3">手表</option>
+                                <option value="4">包</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mould-item">
+                        <div class="item-text">品牌名称</div>
+                        <div class="item-input">
+                            <input type="text" id="BrandName"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="mould-btn">
+                <div class="btn-item btn-query">查询</div>
+                <div class="btn-item btn-add">新增品牌</div>
+                <div class="btn-item btn-batchDelete">删除</div>
+                <div class="btn-item btn-edit">编辑</div>
+                <div class="btn-item btn-add2">新增系列</div>
+            </div>
+            <table id="table" class="table_style" style="margin: 0 auto"></table>
+        </div>
+    </div>
+    <div class="mould-bottom">
+        <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+    </div>
+</div>
+<script type="text/javascript" src="../../../plugin/bootstrap.3.3.7/js/jquery-1.11.1.js"></script>
+<script type="text/javascript" src="../../../plugin/bootstrap.3.3.7/js/bootstrap3.3.7.min.js"></script>
+<script type="text/javascript" src="../../../plugin/bootstrap.3.3.7/js/bootstrap-table.js"></script>
+<script type="text/javascript" src="../../../plugin/bootstrap.3.3.7/js/bootstrap-table-zh-CN.js"></script>
+<script type="text/javascript" src="../../../plugin/bootstrap.3.3.7/js/bootstrap-table-treegrid.js"></script>
+<script type="text/javascript" src="../../../plugin/bootstrap.3.3.7/js/jquery.treegrid.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        loadBrandList();
+        //查询
+        $(".btn-query").on("click",function () {
+            $("#table").bootstrapTable('refresh');
+        });
+        //新增品牌
+        $(".btn-add").on("click",function () {
+            layer.open({
+                type: 2,
+                title: '商品品牌登记',
+                shade: 0.5,
+                skin: 'layui-layer-rim',
+                closeBtn:1,
+                area: ['500px', '320px'],
+                content: '/page/goods/brand-add.shtm'
+            });
+        });
+        //编辑
+        $(".btn-edit").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var type = selections[0].type;
+                if(type=="brand"){
+                    var brandCode = selections[0].id;
+                    layer.open({
+                        type: 2,
+                        title: '品牌修改',
+                        shade: 0.5,
+                        skin: 'layui-layer-rim',
+                        closeBtn:1,
+                        area: ['500px', '320px'],
+                        content: '/page/goods/brand-update.shtm?brandCode='+brandCode
+                    });
+                }else if(type=="series"){
+                    var brandCode = selections[0].pid;
+                    var seriesCode = selections[0].id;
+                    layer.open({
+                        type: 2,
+                        title: '系列修改',
+                        shade: 0.5,
+                        skin: 'layui-layer-rim',
+                        closeBtn:1,
+                        area: ['500px', '320px'],
+                        content: '/page/goods/series-update.shtm?brandCode='+brandCode+'&seriesCode='+seriesCode
+                    });
+                }
+            }
+        });
+        //删除
+        $(".btn-batchDelete").on("click",function(){
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var arry1=[],arry2=[];
+                $.each(selections,function (index,row) {
+                    if(row.type=="brand"){
+                        arry1.push(row.id);
+                    }else if(row.type=="series"){
+                        arry2.push(row.id);
+                    }
+                });
+                layer.confirm('是否确定删除?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url:'/dic/brand/batchDelete.shtm',
+                        type:'POST',
+                        dataType:"json",
+                        data:JSON.stringify({brandIds:arry1.join(","),seriesIds:arry2.join(",")}),
+                        contentType: "application/json; charset=utf-8",
+                        success:function (result) {
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+
+        //新增系列
+        $(".btn-add2").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条品牌进行操作");
+                return;
+            }else{
+                var type = selections[0].type;
+                var brandCode = selections[0].id;
+                if(type=="series"){
+                    layer.msg("请选中需要增加系列的品牌");
+                }else{
+                    layer.open({
+                        type: 2,
+                        title: '品牌系列登记',
+                        shade: 0.5,
+                        skin: 'layui-layer-rim',
+                        closeBtn:1,
+                        area: ['500px', '320px'],
+                        content: '/page/goods/series-add.shtm?brandCode='+brandCode
+                    });
+                }
+            }
+        });
+    });
+
+    /**
+     * 加载品牌列表
+     */
+    function loadBrandList(){
+        $('#table').bootstrapTable({
+            method: "post",
+            striped: false,
+            singleSelect: false,
+            url: "/dic/brand/getBrandListIncludeSeries.shtm",
+            dataType: "json",
+            pagination: true, //分页
+            pageSize: 10,
+            pageNumber: 1,
+            search: false, //显示搜索框
+            contentType: "application/x-www-form-urlencoded",
+            sidePagination: "server", //服务端请求
+            clickToSelect : true, //是否启用点击选中行
+            queryParams:function(params) {
+                return {
+                    pageNum: params.offset/params.limit+1,
+                    pageSize: params.limit,//页码大小
+                    brandName:$("#BrandName").val(),
+                    categoryCode:$("#CategoryCode").find("option:selected").val()
+                };
+            },
+            responseHandler: function(res) {
+                return {
+                    "total": res.data.total,//总页数
+                    "rows": res.data.list   //数据
+                };
+            },
+            onDblClickRow: function (row) {},
+            columns: [
+                {
+                    checkbox: "true",
+                    field: 'check',
+                    align: 'center'
+                },
+                {
+                    title: "品牌名称",
+                    field: 'name',
+                    align: 'left',
+                    formatter:function (val,row) {
+                        if(row.type=="series"){
+                            return '<span style="color:red;">'+val+'</span>';
+                        }else{
+                            return val;
+                        }
+                    }
+                },
+                {
+                    title: "图片",
+                    field: "picUrlArray",
+                    //将图片url格式化，展示为缩略图形式
+                    formatter: function (val,row) {
+                        if(val!=null&&val!=""){
+                            return '<img src="'+val[0]+'" style="height: 30px;cursor: pointer;" alt="图片丢失了">'
+                        }
+                    }
+                },
+                {
+                    title: "商品类别",
+                    field: 'category',
+                    align: 'center',
+                    formatter:function (val,row) {
+                        if(val==1){
+                            return "球鞋";
+                        }else if(val==2){
+                            return "服装";
+                        }else if(val==3){
+                            return "手表";
+                        }else if(val==4){
+                            return "包";
+                        }else{
+                            return "";
+                        }
+                    }
+                }
+            ],
+            treeShowField: 'name',
+            parentIdField: 'pid',
+            onLoadSuccess: function(data) {
+                $('#table').treegrid({
+                    initialState: 'collapsed',//收缩
+                    treeColumn: 1,//指明第几列数据改为树形
+                    expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
+                    expanderCollapsedClass: 'glyphicon glyphicon-triangle-right',
+                    onChange: function() {
+                        $('#table').bootstrapTable('resetWidth');
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

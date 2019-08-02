@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>滚动商品广告管理</title>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/brand.css" rel="stylesheet" type="text/css">
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+<div class="mould-main">
+    <div class="mould-top">
+        <p>商品品牌管理</p>
+    </div>
+    <div class="mould-middle">
+        <div class="mould-content">
+            <div class="mould-search">
+                <div class="mould-items">
+                    <div class="mould-item">
+                        <div class="item-text">商品名称</div>
+                        <div class="item-input">
+                            <input type="text" id="commondityName"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="mould-btn">
+                <div class="btn-item btn-query">查询</div>
+                <div class="btn-item btn-batchDelete">删除</div>
+                <div class="btn-item btn-adv-start" style="display: none;">启动推广</div>
+                <div class="btn-item btn-adv-stop" style="display: none;">停止推广</div>
+            </div>
+            <table id="table" class="table_style" style="margin: 0 auto"></table>
+        </div>
+    </div>
+    <div class="mould-bottom">
+        <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+    </div>
+</div>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        loadCommodityAdvList();
+        //查询
+        $(".btn-query").on("click",function () {
+            $("#table").bootstrapTable('refresh');
+        });
+        //启动推广
+        $(".btn-adv-start").on("click",function(){
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var ADCode = selections[0].adcode;
+                layer.confirm('是否启动推广?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url:'/adv/commodity/start.shtm',
+                        type:'POST',
+                        dataType:"json",
+                        data:{ADCode:ADCode},
+                        success:function (result) {
+                            $(".btn-adv-stop").hide();
+                            $(".btn-adv-start").hide();
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        //停止推广
+        $(".btn-adv-stop").on("click",function(){
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var ADCode = selections[0].adcode;
+                layer.confirm('是否停止推广?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url:'/adv/commodity/stop.shtm',
+                        type:'post',
+                        dataType:"json",
+                        data:{ADCode:ADCode},
+                        success:function (result) {
+                            $(".btn-adv-stop").hide();
+                            $(".btn-adv-start").hide();
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        //批量删除
+        $(".btn-batchDelete").on("click",function(){
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var array=[];
+                $.each(selections,function (index,row) {
+                    array.push(row.adcode);
+                });
+                layer.confirm('是否确定删除?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url:'/adv/commodity/batchDelete.shtm',
+                        type:'POST',
+                        dataType:"json",
+                        data:JSON.stringify({ids:array.join(",")}),
+                        contentType: "application/json; charset=utf-8",
+                        success:function (result) {
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+    });
+    function loadCommodityAdvList(){
+        $('#table').bootstrapTable({
+            method: "post",
+            striped: false,
+            singleSelect: false,
+            url: "/adv/commodity/list.shtm",
+            dataType: "json",
+            pagination: true, //分页
+            pageSize: 10,
+            pageNumber: 1,
+            search: false, //显示搜索框
+            contentType: "application/x-www-form-urlencoded",
+            sidePagination: "server", //服务端请求
+            clickToSelect : true, //是否启用点击选中行
+            queryParams:function(params) {
+                return {
+                    pageNum: params.offset/params.limit+1,
+                    pageSize: params.limit,//页码大小
+                    commondityName:$("#commondityName").val()
+                };
+            },
+            responseHandler: function(res) {
+                return {
+                    "total": res.data.total,//总页数
+                    "rows": res.data.list   //数据
+                };
+            },
+            onCheck:function(row){
+                if(row.status==1){
+                    $(".btn-adv-stop").show();
+                    $(".btn-adv-start").hide();
+                }else if(row.status==2){
+                    $(".btn-adv-stop").hide();
+                    $(".btn-adv-start").show();
+                }else{
+                    $(".btn-adv-stop").hide();
+                    $(".btn-adv-start").hide();
+                }
+            },
+            onUncheck:function(row){
+                $(".btn-adv-stop").hide();
+                $(".btn-adv-start").hide();
+            },
+            onDblClickRow: function (row) {},
+            columns: [
+                {
+                    checkbox: "true",
+                    field: 'check',
+                    align: 'center'
+                },
+                {
+                    title: "商品名称",
+                    field: 'commondityName',
+                    align: 'center'
+                },
+                {
+                    title: "图片",
+                    field: "commodity.picUrlArray",
+                    formatter: function (val,row) {
+                        if(val!=null){
+                            return '<img src="'+val[0]+'" style="height: 30px;cursor: pointer;" title="点击访问" alt="图片丢失了">'
+                        }
+                    }
+                },
+                {
+                    title: "开始日期",
+                    field: 'startDate',
+                    align: 'center'
+                },
+                {
+                    title: "截至日期",
+                    field: 'expiryDate',
+                    align: 'center'
+                },
+                {
+                    title: "状态",
+                    field: 'status',
+                    align: 'center',
+                    formatter:function (val,row) {
+                        if(val==1){return '<span style="color:green;">推广中</span>';}
+                        if(val==2){return '<span style="color:red;">停止</span>';}
+                        if(val==3){return '<span style="color:yellow;">已到期</span>';}
+                    }
+                }
+            ]
+        });
+    }
+</script>
+</body>
+</html>

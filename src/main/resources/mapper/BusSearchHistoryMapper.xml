@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusSearchHistoryMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusSearchHistory">
+    <id column="SearchCode" jdbcType="INTEGER" property="searchCode" />
+    <result column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="SearchContent" jdbcType="VARCHAR" property="searchContent" />
+    <result column="SearchDate" jdbcType="TIMESTAMP" property="searchDate" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    SearchCode, AccountCode, SearchContent, SearchDate
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusSearchHistoryExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_search_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_search_history
+    where SearchCode = #{searchCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_search_history
+    where SearchCode = #{searchCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusSearchHistoryExample">
+    delete from bus_search_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusSearchHistory">
+    insert into bus_search_history (SearchCode, AccountCode, SearchContent, 
+      SearchDate)
+    values (#{searchCode,jdbcType=INTEGER}, #{accountCode,jdbcType=INTEGER}, #{searchContent,jdbcType=VARCHAR}, 
+      #{searchDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusSearchHistory">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="searchCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_search_history
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="searchCode != null">
+        SearchCode,
+      </if>
+      <if test="accountCode != null">
+        AccountCode,
+      </if>
+      <if test="searchContent != null">
+        SearchContent,
+      </if>
+      <if test="searchDate != null">
+        SearchDate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="searchCode != null">
+        #{searchCode,jdbcType=INTEGER},
+      </if>
+      <if test="accountCode != null">
+        #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="searchContent != null">
+        #{searchContent,jdbcType=VARCHAR},
+      </if>
+      <if test="searchDate != null">
+        #{searchDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusSearchHistoryExample" resultType="java.lang.Long">
+    select count(*) from bus_search_history
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_search_history
+    <set>
+      <if test="record.searchCode != null">
+        SearchCode = #{record.searchCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.accountCode != null">
+        AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.searchContent != null">
+        SearchContent = #{record.searchContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.searchDate != null">
+        SearchDate = #{record.searchDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_search_history
+    set SearchCode = #{record.searchCode,jdbcType=INTEGER},
+      AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      SearchContent = #{record.searchContent,jdbcType=VARCHAR},
+      SearchDate = #{record.searchDate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusSearchHistory">
+    update bus_search_history
+    <set>
+      <if test="accountCode != null">
+        AccountCode = #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="searchContent != null">
+        SearchContent = #{searchContent,jdbcType=VARCHAR},
+      </if>
+      <if test="searchDate != null">
+        SearchDate = #{searchDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where SearchCode = #{searchCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusSearchHistory">
+    update bus_search_history
+    set AccountCode = #{accountCode,jdbcType=INTEGER},
+      SearchContent = #{searchContent,jdbcType=VARCHAR},
+      SearchDate = #{searchDate,jdbcType=TIMESTAMP}
+    where SearchCode = #{searchCode,jdbcType=INTEGER}
+  </update>
+</mapper>

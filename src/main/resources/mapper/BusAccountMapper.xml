@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusAccountMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusAccount">
+    <id column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="FirstName" jdbcType="VARCHAR" property="firstName" />
+    <result column="LastName" jdbcType="VARCHAR" property="lastName" />
+    <result column="UserName" jdbcType="VARCHAR" property="userName" />
+    <result column="EmailAddress" jdbcType="VARCHAR" property="emailAddress" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+    <result column="SelectedCurrency" jdbcType="VARCHAR" property="selectedCurrency" />
+    <result column="ShoeSize" jdbcType="VARCHAR" property="shoeSize" />
+    <result column="Vice" jdbcType="VARCHAR" property="vice" />
+    <result column="FingerPrintLogin" jdbcType="INTEGER" property="fingerPrintLogin" />
+    <result column="VacationMode" jdbcType="VARCHAR" property="vacationMode" />
+    <result column="BuyingPayment" jdbcType="INTEGER" property="buyingPayment" />
+    <result column="BuyingBilling" jdbcType="INTEGER" property="buyingBilling" />
+    <result column="BuyingShipping" jdbcType="INTEGER" property="buyingShipping" />
+    <result column="SellerPayment" jdbcType="INTEGER" property="sellerPayment" />
+    <result column="SellerBilling" jdbcType="INTEGER" property="sellerBilling" />
+    <result column="SellerPayout" jdbcType="INTEGER" property="sellerPayout" />
+    <result column="Facebook" jdbcType="VARCHAR" property="facebook" />
+    <result column="Google" jdbcType="VARCHAR" property="google" />
+    <result column="Wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="Sina" jdbcType="VARCHAR" property="sina" />
+    <result column="Salt" jdbcType="VARCHAR" property="salt" />
+    <result column="CommoditySizeFollowing" jdbcType="VARCHAR" property="commoditySizeFollowing" />
+    <result column="Status" jdbcType="VARCHAR" property="status" />
+    <result column="UserExp" jdbcType="INTEGER" property="userExp" />
+    <result column="UserLevel" jdbcType="INTEGER" property="userLevel" />
+    <result column="SellFeeOfWatches" jdbcType="DOUBLE" property="sellFeeOfWatches" />
+    <result column="SellFeeOfHandbags" jdbcType="DOUBLE" property="sellFeeOfHandbags" />
+    <result column="SellFeeOfSnakers" jdbcType="DOUBLE" property="sellFeeOfSnakers" />
+    <result column="StripeCustomerId" jdbcType="VARCHAR" property="stripeCustomerId" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    AccountCode, FirstName, LastName, UserName, EmailAddress, Password, SelectedCurrency, 
+    ShoeSize, Vice, FingerPrintLogin, VacationMode, BuyingPayment, BuyingBilling, BuyingShipping, 
+    SellerPayment, SellerBilling, SellerPayout, Facebook, Google, Wechat, Sina, Salt, 
+    CommoditySizeFollowing, Status, UserExp, UserLevel, SellFeeOfWatches, SellFeeOfHandbags, 
+    SellFeeOfSnakers, StripeCustomerId
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusAccountExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_account
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_account
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusAccountExample">
+    delete from bus_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusAccount">
+    insert into bus_account (AccountCode, FirstName, LastName, 
+      UserName, EmailAddress, Password, 
+      SelectedCurrency, ShoeSize, Vice, 
+      FingerPrintLogin, VacationMode, BuyingPayment, 
+      BuyingBilling, BuyingShipping, SellerPayment, 
+      SellerBilling, SellerPayout, Facebook, 
+      Google, Wechat, Sina, 
+      Salt, CommoditySizeFollowing, Status, 
+      UserExp, UserLevel, SellFeeOfWatches, 
+      SellFeeOfHandbags, SellFeeOfSnakers, StripeCustomerId
+      )
+    values (#{accountCode,jdbcType=INTEGER}, #{firstName,jdbcType=VARCHAR}, #{lastName,jdbcType=VARCHAR}, 
+      #{userName,jdbcType=VARCHAR}, #{emailAddress,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{selectedCurrency,jdbcType=VARCHAR}, #{shoeSize,jdbcType=VARCHAR}, #{vice,jdbcType=VARCHAR}, 
+      #{fingerPrintLogin,jdbcType=INTEGER}, #{vacationMode,jdbcType=VARCHAR}, #{buyingPayment,jdbcType=INTEGER}, 
+      #{buyingBilling,jdbcType=INTEGER}, #{buyingShipping,jdbcType=INTEGER}, #{sellerPayment,jdbcType=INTEGER}, 
+      #{sellerBilling,jdbcType=INTEGER}, #{sellerPayout,jdbcType=INTEGER}, #{facebook,jdbcType=VARCHAR}, 
+      #{google,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{sina,jdbcType=VARCHAR}, 
+      #{salt,jdbcType=VARCHAR}, #{commoditySizeFollowing,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{userExp,jdbcType=INTEGER}, #{userLevel,jdbcType=INTEGER}, #{sellFeeOfWatches,jdbcType=DOUBLE}, 
+      #{sellFeeOfHandbags,jdbcType=DOUBLE}, #{sellFeeOfSnakers,jdbcType=DOUBLE}, #{stripeCustomerId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusAccount">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="accountCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_account
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="accountCode != null">
+        AccountCode,
+      </if>
+      <if test="firstName != null">
+        FirstName,
+      </if>
+      <if test="lastName != null">
+        LastName,
+      </if>
+      <if test="userName != null">
+        UserName,
+      </if>
+      <if test="emailAddress != null">
+        EmailAddress,
+      </if>
+      <if test="password != null">
+        Password,
+      </if>
+      <if test="selectedCurrency != null">
+        SelectedCurrency,
+      </if>
+      <if test="shoeSize != null">
+        ShoeSize,
+      </if>
+      <if test="vice != null">
+        Vice,
+      </if>
+      <if test="fingerPrintLogin != null">
+        FingerPrintLogin,
+      </if>
+      <if test="vacationMode != null">
+        VacationMode,
+      </if>
+      <if test="buyingPayment != null">
+        BuyingPayment,
+      </if>
+      <if test="buyingBilling != null">
+        BuyingBilling,
+      </if>
+      <if test="buyingShipping != null">
+        BuyingShipping,
+      </if>
+      <if test="sellerPayment != null">
+        SellerPayment,
+      </if>
+      <if test="sellerBilling != null">
+        SellerBilling,
+      </if>
+      <if test="sellerPayout != null">
+        SellerPayout,
+      </if>
+      <if test="facebook != null">
+        Facebook,
+      </if>
+      <if test="google != null">
+        Google,
+      </if>
+      <if test="wechat != null">
+        Wechat,
+      </if>
+      <if test="sina != null">
+        Sina,
+      </if>
+      <if test="salt != null">
+        Salt,
+      </if>
+      <if test="commoditySizeFollowing != null">
+        CommoditySizeFollowing,
+      </if>
+      <if test="status != null">
+        Status,
+      </if>
+      <if test="userExp != null">
+        UserExp,
+      </if>
+      <if test="userLevel != null">
+        UserLevel,
+      </if>
+      <if test="sellFeeOfWatches != null">
+        SellFeeOfWatches,
+      </if>
+      <if test="sellFeeOfHandbags != null">
+        SellFeeOfHandbags,
+      </if>
+      <if test="sellFeeOfSnakers != null">
+        SellFeeOfSnakers,
+      </if>
+      <if test="stripeCustomerId != null">
+        StripeCustomerId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="accountCode != null">
+        #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="firstName != null">
+        #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+        #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="emailAddress != null">
+        #{emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="selectedCurrency != null">
+        #{selectedCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="shoeSize != null">
+        #{shoeSize,jdbcType=VARCHAR},
+      </if>
+      <if test="vice != null">
+        #{vice,jdbcType=VARCHAR},
+      </if>
+      <if test="fingerPrintLogin != null">
+        #{fingerPrintLogin,jdbcType=INTEGER},
+      </if>
+      <if test="vacationMode != null">
+        #{vacationMode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyingPayment != null">
+        #{buyingPayment,jdbcType=INTEGER},
+      </if>
+      <if test="buyingBilling != null">
+        #{buyingBilling,jdbcType=INTEGER},
+      </if>
+      <if test="buyingShipping != null">
+        #{buyingShipping,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPayment != null">
+        #{sellerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="sellerBilling != null">
+        #{sellerBilling,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPayout != null">
+        #{sellerPayout,jdbcType=INTEGER},
+      </if>
+      <if test="facebook != null">
+        #{facebook,jdbcType=VARCHAR},
+      </if>
+      <if test="google != null">
+        #{google,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null">
+        #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="sina != null">
+        #{sina,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="commoditySizeFollowing != null">
+        #{commoditySizeFollowing,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="userExp != null">
+        #{userExp,jdbcType=INTEGER},
+      </if>
+      <if test="userLevel != null">
+        #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="sellFeeOfWatches != null">
+        #{sellFeeOfWatches,jdbcType=DOUBLE},
+      </if>
+      <if test="sellFeeOfHandbags != null">
+        #{sellFeeOfHandbags,jdbcType=DOUBLE},
+      </if>
+      <if test="sellFeeOfSnakers != null">
+        #{sellFeeOfSnakers,jdbcType=DOUBLE},
+      </if>
+      <if test="stripeCustomerId != null">
+        #{stripeCustomerId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusAccountExample" resultType="java.lang.Long">
+    select count(*) from bus_account
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_account
+    <set>
+      <if test="record.accountCode != null">
+        AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.firstName != null">
+        FirstName = #{record.firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastName != null">
+        LastName = #{record.lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userName != null">
+        UserName = #{record.userName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emailAddress != null">
+        EmailAddress = #{record.emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        Password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.selectedCurrency != null">
+        SelectedCurrency = #{record.selectedCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="record.shoeSize != null">
+        ShoeSize = #{record.shoeSize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.vice != null">
+        Vice = #{record.vice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fingerPrintLogin != null">
+        FingerPrintLogin = #{record.fingerPrintLogin,jdbcType=INTEGER},
+      </if>
+      <if test="record.vacationMode != null">
+        VacationMode = #{record.vacationMode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buyingPayment != null">
+        BuyingPayment = #{record.buyingPayment,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyingBilling != null">
+        BuyingBilling = #{record.buyingBilling,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyingShipping != null">
+        BuyingShipping = #{record.buyingShipping,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellerPayment != null">
+        SellerPayment = #{record.sellerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellerBilling != null">
+        SellerBilling = #{record.sellerBilling,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellerPayout != null">
+        SellerPayout = #{record.sellerPayout,jdbcType=INTEGER},
+      </if>
+      <if test="record.facebook != null">
+        Facebook = #{record.facebook,jdbcType=VARCHAR},
+      </if>
+      <if test="record.google != null">
+        Google = #{record.google,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wechat != null">
+        Wechat = #{record.wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sina != null">
+        Sina = #{record.sina,jdbcType=VARCHAR},
+      </if>
+      <if test="record.salt != null">
+        Salt = #{record.salt,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commoditySizeFollowing != null">
+        CommoditySizeFollowing = #{record.commoditySizeFollowing,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        Status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.userExp != null">
+        UserExp = #{record.userExp,jdbcType=INTEGER},
+      </if>
+      <if test="record.userLevel != null">
+        UserLevel = #{record.userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellFeeOfWatches != null">
+        SellFeeOfWatches = #{record.sellFeeOfWatches,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sellFeeOfHandbags != null">
+        SellFeeOfHandbags = #{record.sellFeeOfHandbags,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sellFeeOfSnakers != null">
+        SellFeeOfSnakers = #{record.sellFeeOfSnakers,jdbcType=DOUBLE},
+      </if>
+      <if test="record.stripeCustomerId != null">
+        StripeCustomerId = #{record.stripeCustomerId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_account
+    set AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      FirstName = #{record.firstName,jdbcType=VARCHAR},
+      LastName = #{record.lastName,jdbcType=VARCHAR},
+      UserName = #{record.userName,jdbcType=VARCHAR},
+      EmailAddress = #{record.emailAddress,jdbcType=VARCHAR},
+      Password = #{record.password,jdbcType=VARCHAR},
+      SelectedCurrency = #{record.selectedCurrency,jdbcType=VARCHAR},
+      ShoeSize = #{record.shoeSize,jdbcType=VARCHAR},
+      Vice = #{record.vice,jdbcType=VARCHAR},
+      FingerPrintLogin = #{record.fingerPrintLogin,jdbcType=INTEGER},
+      VacationMode = #{record.vacationMode,jdbcType=VARCHAR},
+      BuyingPayment = #{record.buyingPayment,jdbcType=INTEGER},
+      BuyingBilling = #{record.buyingBilling,jdbcType=INTEGER},
+      BuyingShipping = #{record.buyingShipping,jdbcType=INTEGER},
+      SellerPayment = #{record.sellerPayment,jdbcType=INTEGER},
+      SellerBilling = #{record.sellerBilling,jdbcType=INTEGER},
+      SellerPayout = #{record.sellerPayout,jdbcType=INTEGER},
+      Facebook = #{record.facebook,jdbcType=VARCHAR},
+      Google = #{record.google,jdbcType=VARCHAR},
+      Wechat = #{record.wechat,jdbcType=VARCHAR},
+      Sina = #{record.sina,jdbcType=VARCHAR},
+      Salt = #{record.salt,jdbcType=VARCHAR},
+      CommoditySizeFollowing = #{record.commoditySizeFollowing,jdbcType=VARCHAR},
+      Status = #{record.status,jdbcType=VARCHAR},
+      UserExp = #{record.userExp,jdbcType=INTEGER},
+      UserLevel = #{record.userLevel,jdbcType=INTEGER},
+      SellFeeOfWatches = #{record.sellFeeOfWatches,jdbcType=DOUBLE},
+      SellFeeOfHandbags = #{record.sellFeeOfHandbags,jdbcType=DOUBLE},
+      SellFeeOfSnakers = #{record.sellFeeOfSnakers,jdbcType=DOUBLE},
+      StripeCustomerId = #{record.stripeCustomerId,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusAccount">
+    update bus_account
+    <set>
+      <if test="firstName != null">
+        FirstName = #{firstName,jdbcType=VARCHAR},
+      </if>
+      <if test="lastName != null">
+        LastName = #{lastName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        UserName = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="emailAddress != null">
+        EmailAddress = #{emailAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        Password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="selectedCurrency != null">
+        SelectedCurrency = #{selectedCurrency,jdbcType=VARCHAR},
+      </if>
+      <if test="shoeSize != null">
+        ShoeSize = #{shoeSize,jdbcType=VARCHAR},
+      </if>
+      <if test="vice != null">
+        Vice = #{vice,jdbcType=VARCHAR},
+      </if>
+      <if test="fingerPrintLogin != null">
+        FingerPrintLogin = #{fingerPrintLogin,jdbcType=INTEGER},
+      </if>
+      <if test="vacationMode != null">
+        VacationMode = #{vacationMode,jdbcType=VARCHAR},
+      </if>
+      <if test="buyingPayment != null">
+        BuyingPayment = #{buyingPayment,jdbcType=INTEGER},
+      </if>
+      <if test="buyingBilling != null">
+        BuyingBilling = #{buyingBilling,jdbcType=INTEGER},
+      </if>
+      <if test="buyingShipping != null">
+        BuyingShipping = #{buyingShipping,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPayment != null">
+        SellerPayment = #{sellerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="sellerBilling != null">
+        SellerBilling = #{sellerBilling,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPayout != null">
+        SellerPayout = #{sellerPayout,jdbcType=INTEGER},
+      </if>
+      <if test="facebook != null">
+        Facebook = #{facebook,jdbcType=VARCHAR},
+      </if>
+      <if test="google != null">
+        Google = #{google,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null">
+        Wechat = #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="sina != null">
+        Sina = #{sina,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        Salt = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="commoditySizeFollowing != null">
+        CommoditySizeFollowing = #{commoditySizeFollowing,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        Status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="userExp != null">
+        UserExp = #{userExp,jdbcType=INTEGER},
+      </if>
+      <if test="userLevel != null">
+        UserLevel = #{userLevel,jdbcType=INTEGER},
+      </if>
+      <if test="sellFeeOfWatches != null">
+        SellFeeOfWatches = #{sellFeeOfWatches,jdbcType=DOUBLE},
+      </if>
+      <if test="sellFeeOfHandbags != null">
+        SellFeeOfHandbags = #{sellFeeOfHandbags,jdbcType=DOUBLE},
+      </if>
+      <if test="sellFeeOfSnakers != null">
+        SellFeeOfSnakers = #{sellFeeOfSnakers,jdbcType=DOUBLE},
+      </if>
+      <if test="stripeCustomerId != null">
+        StripeCustomerId = #{stripeCustomerId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusAccount">
+    update bus_account
+    set FirstName = #{firstName,jdbcType=VARCHAR},
+      LastName = #{lastName,jdbcType=VARCHAR},
+      UserName = #{userName,jdbcType=VARCHAR},
+      EmailAddress = #{emailAddress,jdbcType=VARCHAR},
+      Password = #{password,jdbcType=VARCHAR},
+      SelectedCurrency = #{selectedCurrency,jdbcType=VARCHAR},
+      ShoeSize = #{shoeSize,jdbcType=VARCHAR},
+      Vice = #{vice,jdbcType=VARCHAR},
+      FingerPrintLogin = #{fingerPrintLogin,jdbcType=INTEGER},
+      VacationMode = #{vacationMode,jdbcType=VARCHAR},
+      BuyingPayment = #{buyingPayment,jdbcType=INTEGER},
+      BuyingBilling = #{buyingBilling,jdbcType=INTEGER},
+      BuyingShipping = #{buyingShipping,jdbcType=INTEGER},
+      SellerPayment = #{sellerPayment,jdbcType=INTEGER},
+      SellerBilling = #{sellerBilling,jdbcType=INTEGER},
+      SellerPayout = #{sellerPayout,jdbcType=INTEGER},
+      Facebook = #{facebook,jdbcType=VARCHAR},
+      Google = #{google,jdbcType=VARCHAR},
+      Wechat = #{wechat,jdbcType=VARCHAR},
+      Sina = #{sina,jdbcType=VARCHAR},
+      Salt = #{salt,jdbcType=VARCHAR},
+      CommoditySizeFollowing = #{commoditySizeFollowing,jdbcType=VARCHAR},
+      Status = #{status,jdbcType=VARCHAR},
+      UserExp = #{userExp,jdbcType=INTEGER},
+      UserLevel = #{userLevel,jdbcType=INTEGER},
+      SellFeeOfWatches = #{sellFeeOfWatches,jdbcType=DOUBLE},
+      SellFeeOfHandbags = #{sellFeeOfHandbags,jdbcType=DOUBLE},
+      SellFeeOfSnakers = #{sellFeeOfSnakers,jdbcType=DOUBLE},
+      StripeCustomerId = #{stripeCustomerId,jdbcType=VARCHAR}
+    where AccountCode = #{accountCode,jdbcType=INTEGER}
+  </update>
+
+  <select id="getSellCount" parameterType="java.lang.Integer" resultType="com.teamax.alleyoop.entity.A2">
+    select
+    case
+    when a.category = 1 then '鞋'
+    when a.category = 2 then '服装'
+    when a.category = 3 then '手表'
+    when a.category = 4 then '包'
+    end as category,
+    CONCAT(ROUND(a.cnt / b.csum * 100, 2),'','%') percent,b.csum total
+    from
+    (select bc.CategoryCode category,count(1) cnt from bus_order bo left join bus_commondity bc on bo.CommondityCode = bc.CommondityCode where bo.OrderType = 'sell' and bo.Seller = #{accountCode} group by category) as a,
+    (select count(1) csum from bus_order bo where bo.Seller = #{accountCode}) as b
+  </select>
+</mapper>

@@ -1,0 +1,693 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusOrderMapper">
+  <!-- 使用ehcache二级缓存 -->
+  <cache type="org.mybatis.caches.ehcache.EhcacheCache"></cache>
+
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusOrder">
+    <id column="OrderCode" jdbcType="INTEGER" property="orderCode" />
+    <result column="OrderType" jdbcType="VARCHAR" property="orderType" />
+    <result column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="SizeCode" jdbcType="INTEGER" property="sizeCode" />
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="Buyer" jdbcType="INTEGER" property="buyer" />
+    <result column="Seller" jdbcType="INTEGER" property="seller" />
+    <result column="CommondityPrice" jdbcType="DOUBLE" property="commondityPrice" />
+    <result column="AuthenticationFee" jdbcType="DOUBLE" property="authenticationFee" />
+    <result column="ShippingFee" jdbcType="DOUBLE" property="shippingFee" />
+    <result column="ProcessingFee" jdbcType="DOUBLE" property="processingFee" />
+    <result column="Progress" jdbcType="VARCHAR" property="progress" />
+    <result column="OrderTime" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="SelfPickup" jdbcType="INTEGER" property="selfPickup" />
+    <result column="BuyerPayment" jdbcType="INTEGER" property="buyerPayment" />
+    <result column="BuyerAddress" jdbcType="INTEGER" property="buyerAddress" />
+    <result column="SellerPayment" jdbcType="INTEGER" property="sellerPayment" />
+    <result column="SellerAddress" jdbcType="INTEGER" property="sellerAddress" />
+    <result column="AskCode" jdbcType="INTEGER" property="askCode" />
+    <result column="BidCode" jdbcType="INTEGER" property="bidCode" />
+    <result column="DiscountCodes" jdbcType="VARCHAR" property="discountCodes" />
+    <result column="ReceiptNumber" jdbcType="VARCHAR" property="receiptNumber" />
+    <result column="PaymentMethod" jdbcType="VARCHAR" property="paymentMethod" />
+    <result column="PaymentTime" jdbcType="TIMESTAMP" property="paymentTime" />
+    <result column="PaymentState" jdbcType="INTEGER" property="paymentState" />
+    <result column="AvailableBuyers" jdbcType="VARCHAR" property="availableBuyers" />
+    <result column="AvailableSellers" jdbcType="VARCHAR" property="availableSellers" />
+    <result column="AvailableBids" jdbcType="VARCHAR" property="availableBids" />
+    <result column="AvailableAsks" jdbcType="VARCHAR" property="availableAsks" />
+
+    <association column="CommondityCode" property="commodity"  select="getCommodityInfo"/>
+    <association column="Buyer" property="purchaser"  select="getAccountInfo"/>
+    <association column="Seller" property="offer"  select="getAccountInfo"/>
+    <association column="BuyerAddress" property="bAddress"  select="getAddressInfo"/>
+    <association column="SellerAddress" property="sAddress"  select="getAddressInfo"/>
+  </resultMap>
+  <resultMap id="commodityResultMap" type="com.teamax.alleyoop.entity.BusCommondity">
+    <id column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="CategoryCode" jdbcType="INTEGER" property="categoryCode" />
+    <result column="BrandCode" jdbcType="INTEGER" property="brandCode" />
+    <result column="SeriesCode" jdbcType="INTEGER" property="seriesCode" />
+    <result column="CommodityName" jdbcType="VARCHAR" property="commodityName" />
+    <result column="BrandName" jdbcType="VARCHAR" property="brandName" />
+    <result column="Picture01" jdbcType="VARCHAR" property="picture01" />
+    <result column="Picture02" jdbcType="VARCHAR" property="picture02" />
+    <result column="Picture03" jdbcType="VARCHAR" property="picture03" />
+    <result column="Picture04" jdbcType="VARCHAR" property="picture04" />
+    <result column="Picture05" jdbcType="VARCHAR" property="picture05" />
+    <result column="Picture06" jdbcType="VARCHAR" property="picture06" />
+    <result column="ReferenceNumber" jdbcType="VARCHAR" property="referenceNumber" />
+    <result column="CaseSize" jdbcType="VARCHAR" property="caseSize" />
+    <result column="CaseMaterial" jdbcType="VARCHAR" property="caseMaterial" />
+    <result column="WatchBand" jdbcType="VARCHAR" property="watchBand" />
+    <result column="Movement" jdbcType="VARCHAR" property="movement" />
+    <result column="Dial" jdbcType="VARCHAR" property="dial" />
+    <result column="Dimensions" jdbcType="VARCHAR" property="dimensions" />
+    <result column="Material" jdbcType="VARCHAR" property="material" />
+    <result column="Retail" jdbcType="VARCHAR" property="retail" />
+    <result column="Color" jdbcType="VARCHAR" property="color" />
+    <result column="Size" jdbcType="VARCHAR" property="size" />
+    <result column="Season" jdbcType="VARCHAR" property="season" />
+    <result column="Style" jdbcType="VARCHAR" property="style" />
+    <result column="ReleaseDate" jdbcType="DATE" property="releaseDate" />
+    <result column="ModifyTime" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="ModifyMan" jdbcType="INTEGER" property="modifyMan" />
+  </resultMap>
+  <resultMap id="accountResultMap" type="com.teamax.alleyoop.entity.BusAccount">
+    <id column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="FirstName" jdbcType="VARCHAR" property="firstName" />
+    <result column="LastName" jdbcType="VARCHAR" property="lastName" />
+    <result column="UserName" jdbcType="VARCHAR" property="userName" />
+    <result column="EmailAddress" jdbcType="VARCHAR" property="emailAddress" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+    <result column="SelectedCurrency" jdbcType="VARCHAR" property="selectedCurrency" />
+    <result column="ShoeSize" jdbcType="VARCHAR" property="shoeSize" />
+    <result column="Vice" jdbcType="VARCHAR" property="vice" />
+    <result column="FingerPrintLogin" jdbcType="INTEGER" property="fingerPrintLogin" />
+    <result column="VacationMode" jdbcType="VARCHAR" property="vacationMode" />
+    <result column="BuyingPayment" jdbcType="INTEGER" property="buyingPayment" />
+    <result column="BuyingBilling" jdbcType="INTEGER" property="buyingBilling" />
+    <result column="BuyingShipping" jdbcType="INTEGER" property="buyingShipping" />
+    <result column="SellerPayment" jdbcType="INTEGER" property="sellerPayment" />
+    <result column="SellerBilling" jdbcType="INTEGER" property="sellerBilling" />
+    <result column="SellerPayout" jdbcType="INTEGER" property="sellerPayout" />
+    <result column="Facebook" jdbcType="VARCHAR" property="facebook" />
+    <result column="Google" jdbcType="VARCHAR" property="google" />
+    <result column="Wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="Sina" jdbcType="VARCHAR" property="sina" />
+  </resultMap>
+  <resultMap id="AddressResultMap" type="com.teamax.alleyoop.entity.BusAccountAddress">
+    <id column="AddressCode" jdbcType="INTEGER" property="addressCode" />
+    <result column="FirstName" jdbcType="VARCHAR" property="firstName" />
+    <result column="LastName" jdbcType="VARCHAR" property="lastName" />
+    <result column="Country" jdbcType="VARCHAR" property="country" />
+    <result column="Province" jdbcType="VARCHAR" property="province" />
+    <result column="City" jdbcType="VARCHAR" property="city" />
+    <result column="Address" jdbcType="VARCHAR" property="address" />
+    <result column="Address2" jdbcType="VARCHAR" property="address2" />
+    <result column="PostalCode" jdbcType="VARCHAR" property="postalCode" />
+    <result column="PhoneNumber" jdbcType="VARCHAR" property="phoneNumber" />
+    <result column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+  </resultMap>
+  <select id="getCommodityInfo" parameterType="java.lang.Integer" resultMap="commodityResultMap" useCache="true">
+    select * from bus_commondity where CommondityCode = #{CommondityCode}
+  </select>
+  <select id="getAccountInfo" parameterType="java.lang.Integer" resultMap="accountResultMap" useCache="true">
+    select * from bus_account where AccountCode = #{AccountCode}
+  </select>
+  <select id="getAddressInfo" parameterType="java.lang.Integer" resultMap="AddressResultMap" useCache="true">
+    select * from bus_account_address where AddressCode = #{AddressCode}
+  </select>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    OrderCode, OrderType, CommondityCode, SizeCode, SizeName, Buyer, Seller, CommondityPrice, 
+    AuthenticationFee, ShippingFee, ProcessingFee, Progress, OrderTime, SelfPickup, BuyerPayment, 
+    BuyerAddress, SellerPayment, SellerAddress, AskCode, BidCode, DiscountCodes, ReceiptNumber, 
+    PaymentMethod, PaymentTime, PaymentState
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusOrderExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_order
+    where OrderCode = #{orderCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_order
+    where OrderCode = #{orderCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusOrderExample">
+    delete from bus_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusOrder">
+    insert into bus_order (OrderCode, OrderType, CommondityCode, 
+      SizeCode, SizeName, Buyer, 
+      Seller, CommondityPrice, AuthenticationFee, 
+      ShippingFee, ProcessingFee, Progress, 
+      OrderTime, SelfPickup, BuyerPayment, 
+      BuyerAddress, SellerPayment, SellerAddress, 
+      AskCode, BidCode, DiscountCodes, 
+      ReceiptNumber, PaymentMethod, PaymentTime, 
+      PaymentState)
+    values (#{orderCode,jdbcType=INTEGER}, #{orderType,jdbcType=VARCHAR}, #{commondityCode,jdbcType=INTEGER}, 
+      #{sizeCode,jdbcType=INTEGER}, #{sizeName,jdbcType=VARCHAR}, #{buyer,jdbcType=INTEGER}, 
+      #{seller,jdbcType=INTEGER}, #{commondityPrice,jdbcType=DOUBLE}, #{authenticationFee,jdbcType=DOUBLE}, 
+      #{shippingFee,jdbcType=DOUBLE}, #{processingFee,jdbcType=DOUBLE}, #{progress,jdbcType=VARCHAR}, 
+      #{orderTime,jdbcType=TIMESTAMP}, #{selfPickup,jdbcType=INTEGER}, #{buyerPayment,jdbcType=INTEGER}, 
+      #{buyerAddress,jdbcType=INTEGER}, #{sellerPayment,jdbcType=INTEGER}, #{sellerAddress,jdbcType=INTEGER}, 
+      #{askCode,jdbcType=INTEGER}, #{bidCode,jdbcType=INTEGER}, #{discountCodes,jdbcType=VARCHAR}, 
+      #{receiptNumber,jdbcType=VARCHAR}, #{paymentMethod,jdbcType=VARCHAR}, #{paymentTime,jdbcType=TIMESTAMP}, 
+      #{paymentState,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusOrder">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="orderCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="orderCode != null">
+        OrderCode,
+      </if>
+      <if test="orderType != null">
+        OrderType,
+      </if>
+      <if test="commondityCode != null">
+        CommondityCode,
+      </if>
+      <if test="sizeCode != null">
+        SizeCode,
+      </if>
+      <if test="sizeName != null">
+        SizeName,
+      </if>
+      <if test="buyer != null">
+        Buyer,
+      </if>
+      <if test="seller != null">
+        Seller,
+      </if>
+      <if test="commondityPrice != null">
+        CommondityPrice,
+      </if>
+      <if test="authenticationFee != null">
+        AuthenticationFee,
+      </if>
+      <if test="shippingFee != null">
+        ShippingFee,
+      </if>
+      <if test="processingFee != null">
+        ProcessingFee,
+      </if>
+      <if test="progress != null">
+        Progress,
+      </if>
+      <if test="orderTime != null">
+        OrderTime,
+      </if>
+      <if test="selfPickup != null">
+        SelfPickup,
+      </if>
+      <if test="buyerPayment != null">
+        BuyerPayment,
+      </if>
+      <if test="buyerAddress != null">
+        BuyerAddress,
+      </if>
+      <if test="sellerPayment != null">
+        SellerPayment,
+      </if>
+      <if test="sellerAddress != null">
+        SellerAddress,
+      </if>
+      <if test="askCode != null">
+        AskCode,
+      </if>
+      <if test="bidCode != null">
+        BidCode,
+      </if>
+      <if test="discountCodes != null">
+        DiscountCodes,
+      </if>
+      <if test="receiptNumber != null">
+        ReceiptNumber,
+      </if>
+      <if test="paymentMethod != null">
+        PaymentMethod,
+      </if>
+      <if test="paymentTime != null">
+        PaymentTime,
+      </if>
+      <if test="paymentState != null">
+        PaymentState,
+      </if>
+      <if test="availableBuyers != null">
+        AvailableBuyers,
+      </if>
+      <if test="availableSellers != null">
+        AvailableSellers,
+      </if>
+      <if test="availableBids != null">
+        AvailableBids,
+      </if>
+      <if test="availableAsks != null">
+        AvailableAsks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="orderCode != null">
+        #{orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="orderType != null">
+        #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="commondityCode != null">
+        #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeCode != null">
+        #{sizeCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeName != null">
+        #{sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyer != null">
+        #{buyer,jdbcType=INTEGER},
+      </if>
+      <if test="seller != null">
+        #{seller,jdbcType=INTEGER},
+      </if>
+      <if test="commondityPrice != null">
+        #{commondityPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="authenticationFee != null">
+        #{authenticationFee,jdbcType=DOUBLE},
+      </if>
+      <if test="shippingFee != null">
+        #{shippingFee,jdbcType=DOUBLE},
+      </if>
+      <if test="processingFee != null">
+        #{processingFee,jdbcType=DOUBLE},
+      </if>
+      <if test="progress != null">
+        #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null">
+        #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="selfPickup != null">
+        #{selfPickup,jdbcType=INTEGER},
+      </if>
+      <if test="buyerPayment != null">
+        #{buyerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="buyerAddress != null">
+        #{buyerAddress,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPayment != null">
+        #{sellerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="sellerAddress != null">
+        #{sellerAddress,jdbcType=INTEGER},
+      </if>
+      <if test="askCode != null">
+        #{askCode,jdbcType=INTEGER},
+      </if>
+      <if test="bidCode != null">
+        #{bidCode,jdbcType=INTEGER},
+      </if>
+      <if test="discountCodes != null">
+        #{discountCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptNumber != null">
+        #{receiptNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMethod != null">
+        #{paymentMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentState != null">
+        #{paymentState,jdbcType=INTEGER},
+      </if>
+      <if test="availableBuyers != null">
+        #{availableBuyers,jdbcType=VARCHAR},
+      </if>
+      <if test="availableSellers != null">
+        #{availableSellers,jdbcType=VARCHAR},
+      </if>
+      <if test="availableBids != null">
+        #{availableBids,jdbcType=VARCHAR},
+      </if>
+      <if test="availableAsks != null">
+        #{availableAsks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusOrderExample" resultType="java.lang.Long">
+    select count(*) from bus_order
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_order
+    <set>
+      <if test="record.orderCode != null">
+        OrderCode = #{record.orderCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.orderType != null">
+        OrderType = #{record.orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.commondityCode != null">
+        CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.sizeCode != null">
+        SizeCode = #{record.sizeCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.sizeName != null">
+        SizeName = #{record.sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.buyer != null">
+        Buyer = #{record.buyer,jdbcType=INTEGER},
+      </if>
+      <if test="record.seller != null">
+        Seller = #{record.seller,jdbcType=INTEGER},
+      </if>
+      <if test="record.commondityPrice != null">
+        CommondityPrice = #{record.commondityPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.authenticationFee != null">
+        AuthenticationFee = #{record.authenticationFee,jdbcType=DOUBLE},
+      </if>
+      <if test="record.shippingFee != null">
+        ShippingFee = #{record.shippingFee,jdbcType=DOUBLE},
+      </if>
+      <if test="record.processingFee != null">
+        ProcessingFee = #{record.processingFee,jdbcType=DOUBLE},
+      </if>
+      <if test="record.progress != null">
+        Progress = #{record.progress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.orderTime != null">
+        OrderTime = #{record.orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.selfPickup != null">
+        SelfPickup = #{record.selfPickup,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyerPayment != null">
+        BuyerPayment = #{record.buyerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="record.buyerAddress != null">
+        BuyerAddress = #{record.buyerAddress,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellerPayment != null">
+        SellerPayment = #{record.sellerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="record.sellerAddress != null">
+        SellerAddress = #{record.sellerAddress,jdbcType=INTEGER},
+      </if>
+      <if test="record.askCode != null">
+        AskCode = #{record.askCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.bidCode != null">
+        BidCode = #{record.bidCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.discountCodes != null">
+        DiscountCodes = #{record.discountCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="record.receiptNumber != null">
+        ReceiptNumber = #{record.receiptNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentMethod != null">
+        PaymentMethod = #{record.paymentMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paymentTime != null">
+        PaymentTime = #{record.paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.paymentState != null">
+        PaymentState = #{record.paymentState,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_order
+    set OrderCode = #{record.orderCode,jdbcType=INTEGER},
+      OrderType = #{record.orderType,jdbcType=VARCHAR},
+      CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      SizeCode = #{record.sizeCode,jdbcType=INTEGER},
+      SizeName = #{record.sizeName,jdbcType=VARCHAR},
+      Buyer = #{record.buyer,jdbcType=INTEGER},
+      Seller = #{record.seller,jdbcType=INTEGER},
+      CommondityPrice = #{record.commondityPrice,jdbcType=DOUBLE},
+      AuthenticationFee = #{record.authenticationFee,jdbcType=DOUBLE},
+      ShippingFee = #{record.shippingFee,jdbcType=DOUBLE},
+      ProcessingFee = #{record.processingFee,jdbcType=DOUBLE},
+      Progress = #{record.progress,jdbcType=VARCHAR},
+      OrderTime = #{record.orderTime,jdbcType=TIMESTAMP},
+      SelfPickup = #{record.selfPickup,jdbcType=INTEGER},
+      BuyerPayment = #{record.buyerPayment,jdbcType=INTEGER},
+      BuyerAddress = #{record.buyerAddress,jdbcType=INTEGER},
+      SellerPayment = #{record.sellerPayment,jdbcType=INTEGER},
+      SellerAddress = #{record.sellerAddress,jdbcType=INTEGER},
+      AskCode = #{record.askCode,jdbcType=INTEGER},
+      BidCode = #{record.bidCode,jdbcType=INTEGER},
+      DiscountCodes = #{record.discountCodes,jdbcType=VARCHAR},
+      ReceiptNumber = #{record.receiptNumber,jdbcType=VARCHAR},
+      PaymentMethod = #{record.paymentMethod,jdbcType=VARCHAR},
+      PaymentTime = #{record.paymentTime,jdbcType=TIMESTAMP},
+      PaymentState = #{record.paymentState,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusOrder">
+    update bus_order
+    <set>
+      <if test="orderType != null">
+        OrderType = #{orderType,jdbcType=VARCHAR},
+      </if>
+      <if test="commondityCode != null">
+        CommondityCode = #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeCode != null">
+        SizeCode = #{sizeCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeName != null">
+        SizeName = #{sizeName,jdbcType=VARCHAR},
+      </if>
+      <if test="buyer != null">
+        Buyer = #{buyer,jdbcType=INTEGER},
+      </if>
+      <if test="seller != null">
+        Seller = #{seller,jdbcType=INTEGER},
+      </if>
+      <if test="commondityPrice != null">
+        CommondityPrice = #{commondityPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="authenticationFee != null">
+        AuthenticationFee = #{authenticationFee,jdbcType=DOUBLE},
+      </if>
+      <if test="shippingFee != null">
+        ShippingFee = #{shippingFee,jdbcType=DOUBLE},
+      </if>
+      <if test="processingFee != null">
+        ProcessingFee = #{processingFee,jdbcType=DOUBLE},
+      </if>
+      <if test="progress != null">
+        Progress = #{progress,jdbcType=VARCHAR},
+      </if>
+      <if test="orderTime != null">
+        OrderTime = #{orderTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="selfPickup != null">
+        SelfPickup = #{selfPickup,jdbcType=INTEGER},
+      </if>
+      <if test="buyerPayment != null">
+        BuyerPayment = #{buyerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="buyerAddress != null">
+        BuyerAddress = #{buyerAddress,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPayment != null">
+        SellerPayment = #{sellerPayment,jdbcType=INTEGER},
+      </if>
+      <if test="sellerAddress != null">
+        SellerAddress = #{sellerAddress,jdbcType=INTEGER},
+      </if>
+      <if test="askCode != null">
+        AskCode = #{askCode,jdbcType=INTEGER},
+      </if>
+      <if test="bidCode != null">
+        BidCode = #{bidCode,jdbcType=INTEGER},
+      </if>
+      <if test="discountCodes != null">
+        DiscountCodes = #{discountCodes,jdbcType=VARCHAR},
+      </if>
+      <if test="receiptNumber != null">
+        ReceiptNumber = #{receiptNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentMethod != null">
+        PaymentMethod = #{paymentMethod,jdbcType=VARCHAR},
+      </if>
+      <if test="paymentTime != null">
+        PaymentTime = #{paymentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paymentState != null">
+        PaymentState = #{paymentState,jdbcType=INTEGER},
+      </if>
+    </set>
+    where OrderCode = #{orderCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusOrder">
+    update bus_order
+    set OrderType = #{orderType,jdbcType=VARCHAR},
+      CommondityCode = #{commondityCode,jdbcType=INTEGER},
+      SizeCode = #{sizeCode,jdbcType=INTEGER},
+      SizeName = #{sizeName,jdbcType=VARCHAR},
+      Buyer = #{buyer,jdbcType=INTEGER},
+      Seller = #{seller,jdbcType=INTEGER},
+      CommondityPrice = #{commondityPrice,jdbcType=DOUBLE},
+      AuthenticationFee = #{authenticationFee,jdbcType=DOUBLE},
+      ShippingFee = #{shippingFee,jdbcType=DOUBLE},
+      ProcessingFee = #{processingFee,jdbcType=DOUBLE},
+      Progress = #{progress,jdbcType=VARCHAR},
+      OrderTime = #{orderTime,jdbcType=TIMESTAMP},
+      SelfPickup = #{selfPickup,jdbcType=INTEGER},
+      BuyerPayment = #{buyerPayment,jdbcType=INTEGER},
+      BuyerAddress = #{buyerAddress,jdbcType=INTEGER},
+      SellerPayment = #{sellerPayment,jdbcType=INTEGER},
+      SellerAddress = #{sellerAddress,jdbcType=INTEGER},
+      AskCode = #{askCode,jdbcType=INTEGER},
+      BidCode = #{bidCode,jdbcType=INTEGER},
+      DiscountCodes = #{discountCodes,jdbcType=VARCHAR},
+      ReceiptNumber = #{receiptNumber,jdbcType=VARCHAR},
+      PaymentMethod = #{paymentMethod,jdbcType=VARCHAR},
+      PaymentTime = #{paymentTime,jdbcType=TIMESTAMP},
+      PaymentState = #{paymentState,jdbcType=INTEGER}
+    where OrderCode = #{orderCode,jdbcType=INTEGER}
+  </update>
+
+  <select id="getTotalSoldPast" resultType="java.lang.Integer" useCache="true">
+    select count(*) from bus_order b
+    where
+      b.Progress &gt; 0
+    AND
+    CommondityCode = #{commodityCode}
+    <if test="past!=null and past=='Over72Hour'">
+      AND date_add(b.OrderTime, interval 72 HOUR ) &gt;= now()
+    </if>
+    <if test="past!=null and past=='Over12Month'">
+      AND date_add(b.OrderTime, interval 12 MONTH ) &gt;= now()
+    </if>
+  </select>
+
+  <select id="getAverageSalePricePast" resultType="java.lang.Double" useCache="true">
+    select sum(b.CommondityPrice)/count(*) from bus_order b
+    where
+      b.Progress &gt; 0
+    AND
+    CommondityCode = #{commodityCode}
+    <if test="past!=null and past=='Over72Hour'">
+      AND date_add(b.OrderTime, interval 72 HOUR ) &gt;= now()
+    </if>
+    <if test="past!=null and past=='Over12Month'">
+      AND date_add(b.OrderTime, interval 12 MONTH ) &gt;= now()
+    </if>
+  </select>
+
+  <select id="getHighestSoldPricePast" resultType="java.lang.Double" useCache="true">
+    select max(b.CommondityPrice) from bus_order b
+    where
+      b.Progress &gt; 0
+    AND
+    CommondityCode = #{commodityCode}
+    <if test="past!=null and past=='Over72Hour'">
+      AND date_add(b.OrderTime, interval 72 HOUR ) &gt;= now()
+    </if>
+    <if test="past!=null and past=='Over12Month'">
+      AND date_add(b.OrderTime, interval 12 MONTH ) &gt;= now()
+    </if>
+  </select>
+</mapper>

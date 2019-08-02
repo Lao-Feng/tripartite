@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.DicSeriesMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.DicSeries">
+    <id column="SeriesCode" jdbcType="INTEGER" property="seriesCode" />
+    <result column="SeriesName" jdbcType="VARCHAR" property="seriesName" />
+    <result column="BrandCode" jdbcType="INTEGER" property="brandCode" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    SeriesCode, SeriesName, BrandCode
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.DicSeriesExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from dic_series
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from dic_series
+    where SeriesCode = #{seriesCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from dic_series
+    where SeriesCode = #{seriesCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.DicSeriesExample">
+    delete from dic_series
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.DicSeries">
+    insert into dic_series (SeriesCode, SeriesName, BrandCode
+      )
+    values (#{seriesCode,jdbcType=INTEGER}, #{seriesName,jdbcType=VARCHAR}, #{brandCode,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.DicSeries">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="seriesCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into dic_series
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="seriesCode != null">
+        SeriesCode,
+      </if>
+      <if test="seriesName != null">
+        SeriesName,
+      </if>
+      <if test="brandCode != null">
+        BrandCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="seriesCode != null">
+        #{seriesCode,jdbcType=INTEGER},
+      </if>
+      <if test="seriesName != null">
+        #{seriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="brandCode != null">
+        #{brandCode,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.DicSeriesExample" resultType="java.lang.Long">
+    select count(*) from dic_series
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update dic_series
+    <set>
+      <if test="record.seriesCode != null">
+        SeriesCode = #{record.seriesCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.seriesName != null">
+        SeriesName = #{record.seriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.brandCode != null">
+        BrandCode = #{record.brandCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update dic_series
+    set SeriesCode = #{record.seriesCode,jdbcType=INTEGER},
+      SeriesName = #{record.seriesName,jdbcType=VARCHAR},
+      BrandCode = #{record.brandCode,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.DicSeries">
+    update dic_series
+    <set>
+      <if test="seriesName != null">
+        SeriesName = #{seriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="brandCode != null">
+        BrandCode = #{brandCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    where SeriesCode = #{seriesCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.DicSeries">
+    update dic_series
+    set SeriesName = #{seriesName,jdbcType=VARCHAR},
+      BrandCode = #{brandCode,jdbcType=INTEGER}
+    where SeriesCode = #{seriesCode,jdbcType=INTEGER}
+  </update>
+</mapper>

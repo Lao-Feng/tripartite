@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.BusAdvertisementRollMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.BusAdvertisementRoll">
+    <id column="ADCode" jdbcType="INTEGER" property="ADCode" />
+    <result column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="CommondityName" jdbcType="VARCHAR" property="commondityName" />
+    <result column="StartDate" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="ExpiryDate" jdbcType="TIMESTAMP" property="expiryDate" />
+    <result column="SortIndex" jdbcType="INTEGER" property="sortIndex" />
+    <result column="Status" jdbcType="INTEGER" property="status" />
+    <association column="CommondityCode" property="commodity"  select="getCommodityInfo"/>
+  </resultMap>
+  <resultMap id="commodityResultMap" type="com.teamax.alleyoop.entity.BusCommondity">
+    <id column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="CategoryCode" jdbcType="INTEGER" property="categoryCode" />
+    <result column="BrandCode" jdbcType="INTEGER" property="brandCode" />
+    <result column="SeriesCode" jdbcType="INTEGER" property="seriesCode" />
+    <result column="CommodityName" jdbcType="VARCHAR" property="commodityName" />
+    <result column="BrandName" jdbcType="VARCHAR" property="brandName" />
+    <result column="Picture01" jdbcType="VARCHAR" property="picture01" />
+    <result column="Picture02" jdbcType="VARCHAR" property="picture02" />
+    <result column="Picture03" jdbcType="VARCHAR" property="picture03" />
+    <result column="Picture04" jdbcType="VARCHAR" property="picture04" />
+    <result column="Picture05" jdbcType="VARCHAR" property="picture05" />
+    <result column="Picture06" jdbcType="VARCHAR" property="picture06" />
+    <result column="ReferenceNumber" jdbcType="VARCHAR" property="referenceNumber" />
+    <result column="CaseSize" jdbcType="VARCHAR" property="caseSize" />
+    <result column="CaseMaterial" jdbcType="VARCHAR" property="caseMaterial" />
+    <result column="WatchBand" jdbcType="VARCHAR" property="watchBand" />
+    <result column="Movement" jdbcType="VARCHAR" property="movement" />
+    <result column="Dial" jdbcType="VARCHAR" property="dial" />
+    <result column="Dimensions" jdbcType="VARCHAR" property="dimensions" />
+    <result column="Material" jdbcType="VARCHAR" property="material" />
+    <result column="Retail" jdbcType="VARCHAR" property="retail" />
+    <result column="Color" jdbcType="VARCHAR" property="color" />
+    <result column="Size" jdbcType="VARCHAR" property="size" />
+    <result column="Season" jdbcType="VARCHAR" property="season" />
+    <result column="Style" jdbcType="VARCHAR" property="style" />
+    <result column="ReleaseDate" jdbcType="DATE" property="releaseDate" />
+    <result column="ModifyTime" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="ModifyMan" jdbcType="INTEGER" property="modifyMan" />
+  </resultMap>
+  <select id="getCommodityInfo" parameterType="java.lang.Integer" resultMap="commodityResultMap">
+    select * from bus_commondity where CommondityCode = #{CommondityCode}
+  </select>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    ADCode, CommondityCode, CommondityName, StartDate, ExpiryDate, SortIndex, Status
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRollExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from bus_advertisement_roll
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from bus_advertisement_roll
+    where ADCode = #{ADCode,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from bus_advertisement_roll
+    where ADCode = #{ADCode,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRollExample">
+    delete from bus_advertisement_roll
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRoll">
+    insert into bus_advertisement_roll (ADCode, CommondityCode, CommondityName, 
+      StartDate, ExpiryDate, SortIndex, 
+      Status)
+    values (#{ADCode,jdbcType=INTEGER}, #{commondityCode,jdbcType=INTEGER}, #{commondityName,jdbcType=VARCHAR}, 
+      #{startDate,jdbcType=TIMESTAMP}, #{expiryDate,jdbcType=TIMESTAMP}, #{sortIndex,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRoll">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="ADCode">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into bus_advertisement_roll
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="ADCode != null">
+        ADCode,
+      </if>
+      <if test="commondityCode != null">
+        CommondityCode,
+      </if>
+      <if test="commondityName != null">
+        CommondityName,
+      </if>
+      <if test="startDate != null">
+        StartDate,
+      </if>
+      <if test="expiryDate != null">
+        ExpiryDate,
+      </if>
+      <if test="sortIndex != null">
+        SortIndex,
+      </if>
+      <if test="status != null">
+        Status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="ADCode != null">
+        #{ADCode,jdbcType=INTEGER},
+      </if>
+      <if test="commondityCode != null">
+        #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="commondityName != null">
+        #{commondityName,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiryDate != null">
+        #{expiryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sortIndex != null">
+        #{sortIndex,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRollExample" resultType="java.lang.Long">
+    select count(*) from bus_advertisement_roll
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update bus_advertisement_roll
+    <set>
+      <if test="record.ADCode != null">
+        ADCode = #{record.ADCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.commondityCode != null">
+        CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.commondityName != null">
+        CommondityName = #{record.commondityName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startDate != null">
+        StartDate = #{record.startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expiryDate != null">
+        ExpiryDate = #{record.expiryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.sortIndex != null">
+        SortIndex = #{record.sortIndex,jdbcType=INTEGER},
+      </if>
+      <if test="record.status != null">
+        Status = #{record.status,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update bus_advertisement_roll
+    set ADCode = #{record.ADCode,jdbcType=INTEGER},
+      CommondityCode = #{record.commondityCode,jdbcType=INTEGER},
+      CommondityName = #{record.commondityName,jdbcType=VARCHAR},
+      StartDate = #{record.startDate,jdbcType=TIMESTAMP},
+      ExpiryDate = #{record.expiryDate,jdbcType=TIMESTAMP},
+      SortIndex = #{record.sortIndex,jdbcType=INTEGER},
+      Status = #{record.status,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRoll">
+    update bus_advertisement_roll
+    <set>
+      <if test="commondityCode != null">
+        CommondityCode = #{commondityCode,jdbcType=INTEGER},
+      </if>
+      <if test="commondityName != null">
+        CommondityName = #{commondityName,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        StartDate = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiryDate != null">
+        ExpiryDate = #{expiryDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sortIndex != null">
+        SortIndex = #{sortIndex,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        Status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where ADCode = #{ADCode,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.BusAdvertisementRoll">
+    update bus_advertisement_roll
+    set CommondityCode = #{commondityCode,jdbcType=INTEGER},
+      CommondityName = #{commondityName,jdbcType=VARCHAR},
+      StartDate = #{startDate,jdbcType=TIMESTAMP},
+      ExpiryDate = #{expiryDate,jdbcType=TIMESTAMP},
+      SortIndex = #{sortIndex,jdbcType=INTEGER},
+      Status = #{status,jdbcType=INTEGER}
+    where ADCode = #{ADCode,jdbcType=INTEGER}
+  </update>
+
+  <select id="getCommodityAdvList" resultType="com.teamax.alleyoop.entity.BusCommondity">
+    select bc.*
+    from bus_advertisement_roll bar
+    left join bus_commondity bc
+    on bar.CommondityCode = bc.CommondityCode
+    where bar.Status = 1
+  </select>
+</mapper>

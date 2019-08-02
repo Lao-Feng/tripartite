@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamax.alleyoop.dao.RelAccountCommodityFollowingMapper">
+  <resultMap id="BaseResultMap" type="com.teamax.alleyoop.entity.RelAccountCommodityFollowing">
+    <id column="Id" jdbcType="INTEGER" property="id" />
+    <result column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="SizeCode" jdbcType="INTEGER" property="sizeCode" />
+    <association column="AccountCode" property="account"  select="getAccountInfo"/>
+    <association column="SizeCode" property="commoditySize"  select="getCommoditySize"/>
+  </resultMap>
+  <resultMap id="BusAccountResultMap" type="com.teamax.alleyoop.entity.BusAccount">
+    <id column="AccountCode" jdbcType="INTEGER" property="accountCode" />
+    <result column="FirstName" jdbcType="VARCHAR" property="firstName" />
+    <result column="LastName" jdbcType="VARCHAR" property="lastName" />
+    <result column="UserName" jdbcType="VARCHAR" property="userName" />
+    <result column="EmailAddress" jdbcType="VARCHAR" property="emailAddress" />
+    <result column="Password" jdbcType="VARCHAR" property="password" />
+    <result column="SelectedCurrency" jdbcType="VARCHAR" property="selectedCurrency" />
+    <result column="ShoeSize" jdbcType="VARCHAR" property="shoeSize" />
+    <result column="Vice" jdbcType="VARCHAR" property="vice" />
+    <result column="FingerPrintLogin" jdbcType="INTEGER" property="fingerPrintLogin" />
+    <result column="VacationMode" jdbcType="VARCHAR" property="vacationMode" />
+    <result column="BuyingPayment" jdbcType="INTEGER" property="buyingPayment" />
+    <result column="BuyingBilling" jdbcType="INTEGER" property="buyingBilling" />
+    <result column="BuyingShipping" jdbcType="INTEGER" property="buyingShipping" />
+    <result column="SellerPayment" jdbcType="INTEGER" property="sellerPayment" />
+    <result column="SellerBilling" jdbcType="INTEGER" property="sellerBilling" />
+    <result column="SellerPayout" jdbcType="INTEGER" property="sellerPayout" />
+    <result column="Facebook" jdbcType="VARCHAR" property="facebook" />
+    <result column="Google" jdbcType="VARCHAR" property="google" />
+    <result column="Wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="Sina" jdbcType="VARCHAR" property="sina" />
+    <result column="Salt" jdbcType="VARCHAR" property="salt" />
+    <result column="Status" jdbcType="VARCHAR" property="status" />
+    <result column="CommoditySizeFollowing" jdbcType="VARCHAR" property="commoditySizeFollowing" />
+  </resultMap>
+  <resultMap id="BusCommonditySizeResultMap" type="com.teamax.alleyoop.entity.BusCommonditySize">
+    <id column="SizeCode" jdbcType="INTEGER" property="sizeCode" />
+    <result column="SizeName" jdbcType="VARCHAR" property="sizeName" />
+    <result column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="LowestAsk" jdbcType="DOUBLE" property="lowestAsk" />
+    <result column="HighestBid" jdbcType="DOUBLE" property="highestBid" />
+    <association column="CommondityCode" property="commodity"  select="getCommodityInfo"/>
+  </resultMap>
+  <resultMap id="CommodityResultMap" type="com.teamax.alleyoop.entity.BusCommondity">
+    <id column="CommondityCode" jdbcType="INTEGER" property="commondityCode" />
+    <result column="CommodityName" jdbcType="VARCHAR" property="commodityName" />
+    <result column="BrandName" jdbcType="VARCHAR" property="brandName" />
+    <result column="Picture" jdbcType="VARCHAR" property="picture" />
+    <result column="Color" jdbcType="VARCHAR" property="color" />
+  </resultMap>
+  <select id="getCommoditySize" parameterType="java.lang.Integer" resultMap="BusCommonditySizeResultMap">
+    select * from bus_commondity_size where SizeCode = #{SizeCode}
+  </select>
+  <select id="getCommodityInfo" parameterType="java.lang.Integer" resultMap="CommodityResultMap">
+    select CommondityCode,CommodityName,BrandName,Picture,Color from bus_commondity where CommondityCode = #{CommondityCode}
+  </select>
+  <select id="getAccountInfo" parameterType="java.lang.Integer" resultMap="BusAccountResultMap">
+    select * from bus_account where AccountCode = #{AccountCode}
+  </select>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    Id, AccountCode, SizeCode
+  </sql>
+  <select id="selectByExample" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowingExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    racf.*
+    from rel_account_commodity_following racf
+    left join bus_commondity_size bcs on racf.SizeCode = bcs.SizeCode
+    left join bus_commondity bc on bcs.CommondityCode = bc.CommondityCode
+    left join bus_account_notification ban on racf.AccountCode = ban.AccountCode
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <if test="limit != null">
+      <if test="offset != null">
+        limit ${offset}, ${limit}
+      </if>
+      <if test="offset == null">
+        limit ${limit}
+      </if>
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from rel_account_commodity_following
+    where Id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from rel_account_commodity_following
+    where Id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowingExample">
+    delete from rel_account_commodity_following
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowing">
+    insert into rel_account_commodity_following (Id, AccountCode, SizeCode
+      )
+    values (#{id,jdbcType=INTEGER}, #{accountCode,jdbcType=INTEGER}, #{sizeCode,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowing">
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into rel_account_commodity_following
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        Id,
+      </if>
+      <if test="accountCode != null">
+        AccountCode,
+      </if>
+      <if test="sizeCode != null">
+        SizeCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="accountCode != null">
+        #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeCode != null">
+        #{sizeCode,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowingExample" resultType="java.lang.Long">
+    select count(*) from rel_account_commodity_following
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update rel_account_commodity_following
+    <set>
+      <if test="record.id != null">
+        Id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.accountCode != null">
+        AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="record.sizeCode != null">
+        SizeCode = #{record.sizeCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update rel_account_commodity_following
+    set Id = #{record.id,jdbcType=INTEGER},
+      AccountCode = #{record.accountCode,jdbcType=INTEGER},
+      SizeCode = #{record.sizeCode,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowing">
+    update rel_account_commodity_following
+    <set>
+      <if test="accountCode != null">
+        AccountCode = #{accountCode,jdbcType=INTEGER},
+      </if>
+      <if test="sizeCode != null">
+        SizeCode = #{sizeCode,jdbcType=INTEGER},
+      </if>
+    </set>
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.teamax.alleyoop.entity.RelAccountCommodityFollowing">
+    update rel_account_commodity_following
+    set AccountCode = #{accountCode,jdbcType=INTEGER},
+      SizeCode = #{sizeCode,jdbcType=INTEGER}
+    where Id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

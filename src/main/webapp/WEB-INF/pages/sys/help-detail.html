@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .newTit{
+            padding: 10px 5px;
+        }
+        .newTop{
+            text-align: center;
+            font-size: 20px;
+        }
+        .newSub{
+            color: #999999;
+            font-size: 12px;
+            text-align: center;
+        }
+        .newSub span{
+            margin-right: 10px;
+        }
+        .newLine{
+            height: 8px;
+            width: 96%;
+            margin: 0 auto;
+            background-size: 100% 100%;
+        }
+        .newCon{
+            /* color:white;*/
+            margin: 0 auto;
+        }
+        .newCon p{
+            text-indent: 2em;
+            padding: 5px;
+            line-height: 30px;
+        }
+    </style>
+</head>
+<body style="background-color: #ffffff;">
+<div class="newTit">
+    <h2 class="newTop" th:text="${news.title}"></h2>
+    <p class="newSub">
+        <span th:text="${#dates.format(news.newstime,'yyyy年MM月dd日 HH:mm:ss')} "></span>
+        <span><label>发布者：</label><label th:text="${news.author}"></label></span>
+    </p>
+    <p class="newLine"></p>
+</div>
+<div class="newCon" th:utext="${news.contentStr}"></div>
+</body>
+</html>

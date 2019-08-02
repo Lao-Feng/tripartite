@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!-- 自动扫描 -->
+    <context:component-scan base-package="com.teamax.alleyoop.dao"/>
+    <context:component-scan base-package="com.teamax.alleyoop.service"/>
+
+    <!-- druid监控配置 -->
+    <import resource="classpath:xml/spring/spring-context-druid-stat.xml"/>
+    <!-- 事务管理配置 -->
+    <import resource="classpath:xml/mybatis/spring-context-tx.xml"/>
+    <!-- ehcache配置 -->
+    <import resource="classpath:xml/shiro/spring-ehcache.xml"/>
+
+    <bean id="prop" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <array>
+                <value>classpath:property/http-url-config.properties</value>
+            </array>
+        </property>
+        <!-- 设置编码格式 -->
+        <property name="fileEncoding" value="UTF-8"></property>
+    </bean>
+
+    <bean id="updateExpiredPrice" class="com.teamax.alleyoop.controller.ScheduleRun" scope="singleton" init-method="updateExpiredPrice"></bean>
+    <bean id="bidExpiringNotification" class="com.teamax.alleyoop.controller.ScheduleRun" scope="singleton" init-method="expiringNotification"></bean>
+    <bean id="updateCommoditySoldInfo" class="com.teamax.alleyoop.controller.ScheduleRun" scope="singleton" init-method="updateCommoditySoldInfo"></bean>
+</beans>

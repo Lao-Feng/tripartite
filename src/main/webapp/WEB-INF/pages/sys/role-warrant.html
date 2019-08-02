@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+    <link type="text/css" rel="stylesheet" href="../../../css/zTreeStyle/zTreeStyle.css" />
+    <link type="text/css" rel="stylesheet" href="../../../css/tree.css"/>
+    <link type="text/css" rel="stylesheet" href="../../../css/user.css"/>
+</head>
+<body>
+    <input type="hidden" id="roleId" th:value="${roleId}"/>
+    <div class="warrant_nav">
+        <ul>
+            <li class="warrant_active"><span class="step">1</span>系统功能<span class="chevron"></span></li>
+            <!--
+            <li><span class="step">2</span>角色考核<span class="chevron"></span></li>
+            <li><span class="step">2</span>系统按钮<span class="chevron"></span></li>
+            <li><span class="step">3</span>系统视图<span class="chevron"></span></li>
+            <li><span class="step">4</span>数据权限<span class="chevron"></span></li>
+            -->
+        </ul>
+        <div class="clear"></div>
+    </div>
+
+    <div class="warrant_main">
+        <div class="tree_left" style="display: block">
+            <div class="tree_left_top">
+                <div class=" order_ztree l_left organize_ztree" style="width: 100%">
+                    <p><ul id="modulesTree" class="ztree"  style=" overflow:auto;margin-left: 20px"></ul></p>
+                </div>
+            </div>
+        </div>
+        <div class="tree_left">
+            <div class="tree_left_top">
+                <div class=" order_ztree l_left organize_ztree" style="width: 100%">
+                    <p><ul id="assessTree" class="ztree"  style=" overflow:auto;margin-left: 20px"></ul></p>
+                </div>
+            </div>
+        </div>
+        <div class="tree_left">
+            <div class="tree_left_top">
+                <div class=" order_ztree l_left organize_ztree" style="width: 100%">
+                    <p><ul id="treeDemo2" class="ztree"  style=" overflow:auto;margin-left: 20px"></ul></p>
+                </div>
+            </div>
+        </div>
+        <div class="tree_left last_treeLeft">
+            <p class="p">
+                <input type="radio" name="sex" class="l_left">仅限本人
+            </p>
+            <p class="p">
+                <input type="radio" name="sex" class="l_left">仅限本人及下属
+            </p>
+            <p class="p">
+                <input type="radio" name="sex" class="l_left">所在部门
+            </p>
+            <p class="p">
+                <input type="radio" name="sex" class="l_left">所在公司
+            </p>
+            <div>
+                <div class="p">
+                    <input type="radio" name="sex" class="l_left" id="name">自定义设置
+                </div>
+            <div class=" order_ztree l_left organize_ztree" id="tree" style="width: 100%;height: 170px;overflow: auto;margin: 20px 0;display: none">
+            <ul id="treeDemo3" class="ztree"  style=" overflow:auto;margin-left: 20px"></ul>
+            </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+
+<div class="notice_bot">
+    <div class="l_left"><input type="checkbox" checked="checked"/>保存并关闭窗口</div>
+    <div class="r_right but_p">
+        <button class="but_save" id="btn_save">保存</button>
+        <button class="but_close" id="btn_close">关闭</button>
+    </div>
+</div>
+<script type="text/javascript" src="../../../js/jquery-2.2.0.min.js"></script>
+<script type="text/javascript" src="../../../plugin/ztree/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="../../../plugin/ztree/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="../../../plugin/ztree/jquery.ztree.exedit-3.5.js"></script>
+<script type="text/javascript" src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script>
+    var setting = {
+        view: {
+            dblClickExpand: false
+        },
+        data: {
+            simpleData: {
+                enable:true,
+                idKey: "id",
+                pIdKey: "pid"
+            }
+        },
+        check: {
+            enable: true
+        }
+    };
+    $(function(){
+        //加载ZTree树结构
+        $.ajax({
+            type : 'POST',
+            dataType : 'json',
+            url : "/sys/role/getZTreeByRoleId.shtm",
+            data :{roleId:$("#roleId").val()},
+            success : function(result) {
+                var zNodes = result.nodes;
+                $.fn.zTree.init($("#modulesTree"), setting, zNodes);
+            }
+        });
+        //关闭按钮
+        $("#btn_close").on("click",function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+        //保存按钮
+        $("#btn_save").on("click",function () {
+            var treeObj = $.fn.zTree.getZTreeObj("modulesTree");
+            var nodes = treeObj.getCheckedNodes(true);
+            var arry = [];
+            for ( var i=0;i < nodes.length;i++) {
+                arry.push(nodes[i].id);
+            }
+            layer.confirm('是否确定授权?', {
+                title: '提示',
+                btn: ['确定', '取消'] //按钮
+            }, function (index) {
+                $.ajax({
+                    url: '/sys/role/warrant.shtm',
+                    type: 'post',
+                    contentType: "application/json",
+                    data: JSON.stringify({mIds:arry.join(","),roleId:$("#roleId").val()}),
+                    dataType: "json",
+                    success:function (result) {
+                        layer.msg(result.msg);
+                        if($(".notice_bot").find("input[type='checkbox']")[0].checked){
+                            $(".but_close").click();
+                        }
+                    }
+                });
+            }, function (index) {
+                layer.close(index);
+            });
+        });
+
+        //权限资源标签切换
+        $(".warrant_nav ul li").each(function(index){
+            $(this).click(function(){
+                $(".warrant_nav ul li").removeClass("warrant_active");
+                $(this).addClass("warrant_active");
+                $(".warrant_main .tree_left").eq(index).show().siblings(".tree_left").stop().hide();
+            })
+        });
+    });
+
+</script>
+
+</body>
+</html>

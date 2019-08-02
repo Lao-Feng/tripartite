@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<head>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/tail.css" rel="stylesheet" type="text/css">
+    <style>
+        .page {
+            display: table;
+            margin: 0 auto;
+            background: #F0F0F0;
+            -moz-box-shadow: 0 5px 20px #CCCCCC;
+            -webkit-box-shadow: 0 5px 20px #CCCCCC;
+            box-shadow: 0 5px 20px #CCCCCC;
+        }
+        .box {
+            width: auto;
+            margin: 18px auto 0 auto;
+        }
+        .event_list {
+            height: 456px;
+            width: 295px;
+            float: right;
+            background: url('../../../img/dian3.png') 71px 0 repeat-y;
+        }
+        .event_list h3 {
+            margin: 0 0 10px 64px;
+            font-size: 24px;
+            font-family: Georgia;
+            color: #0066ff;
+            padding-left: 25px;
+            background: url('../../../img/jian.png') 0 -45px no-repeat;
+            height: 38px;
+            line-height: 30px;
+            font-style: italic;
+        }
+        .event_list li {
+            background: url('../../../img/jian.png') 68px -80px no-repeat;
+        }
+        .event_list li span {
+            width: 63px;
+            text-align: right;
+            display: block;
+            float: left;
+            margin-top: 10px;
+        }
+        .event_list li p {
+            width: auto;
+            margin-left: 0px;
+            display: inline-block;
+            padding-left: 10px;
+            background: url('../../../img/jian.png') -21px 0 no-repeat;
+            line-height: 25px;
+            _float: left;
+        }
+        .event_list li p span {
+            width: 170px;
+            text-align: left;
+            border-bottom: 2px solid #DDD;
+            padding: 10px 15px;
+            background: #FFF;
+            margin: 0;
+        }
+        .event_list li p span div{
+            font-size: 12px;
+            border-top: 1px dashed #CCCCCC;
+        }
+        .process {
+            color: #00a0e9;
+            font-weight: bold;
+        }
+        .noImg {
+            border: solid 1px #CCCCCC;
+            background-color: #EEEEEE;
+        }
+        .reportImg {
+            width: 100px;
+            height: 100px;
+            margin-right: 5px;
+            border-radius: 5px;
+        }
+        .tail-nav ul li {
+            line-height: 20px;
+        }
+
+        #table thead tr{background-color: #e7f0f6 !important;}
+        ul{list-style: none}
+        .clear{clear: both}
+        .time,.time1{
+            position: absolute;
+            text-align: center;
+            top:32px;
+            left: 0;
+            width: 300px;
+            height: 250px;
+            background-color: #fff;
+            border: 1px #ccc solid;
+            display: none;
+            z-index: 9
+        }
+        .time2{
+            position: absolute;
+            text-align: center;
+            top:32px;
+            left: 0;
+            width: 300px;
+            height: 250px;
+            background-color: #fff;
+            border: 1px #ccc solid;
+        }
+        .time2 .table tr td{text-align: center;margin-top: 4px;vertical-align:middle}
+        .time2 .table tbody{height: 200px;overflow-y: auto}
+        #table td{text-align: center !important;}
+        .month ul,.week ul{margin: 0 8px}
+        .week ul li{float: left;padding: 2px 6px;font-size: 13px;border-radius: 2px;cursor: pointer;margin-right:2px }
+        .month ul li{float: left;width:25px;height:25px;line-height:25px;border-radius: 50%;font-size: 14px;cursor: pointer;margin:2px 2px 2px 0;font-weight: bold}
+        .myself input,.month input,.week input{width: 200px !important;margin-bottom: 10px;text-align: center}
+        .day p,.week p{font-size: 18px;font-weight: 700;color: #2980B9;cursor: pointer;line-height: 30px}
+        .starHour a,.starMinute a,.endHour a,.endMinute a{display: inline-block;position: absolute;width: 32px;height: 22px;border-radius: 2px;left:0;top: 0;text-align: left;padding-left: 4px;cursor: pointer}
+        .starHour ul,.starMinute ul,.endHour ul,.endMinute ul{display:none;position: absolute;width: 36px;height: 160px;border-radius: 2px;left:0;top: 24px;border: 1px #ccc solid;overflow-y: auto;padding: 5px 0;cursor: pointer}
+        .system-search-btn input {
+            height: 32px;
+            border: 1px #ccc solid;
+            border-radius: 6px;
+            width: 220px
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" name="orderCode" th:value="${order.orderCode}">
+<div class="main">
+    <div class="tail-nav l_left" style="width: 30%;padding: 0;">
+        <div class="page">
+            <div class="box">
+                <ul class="event_list"></ul>
+            </div>
+        </div>
+    </div>
+    <div class="content" style="width: 69%;float: right;padding: 0px 0 30px 0;">
+        <div class="warrant_nav">
+            <ul>
+                <li class="warrant_active"><span class="step">1</span>订单信息<span class="chevron"></span></li>
+                <li><span class="step">2</span>商品信息<span class="chevron"></span></li>
+                <li th:if="${order.purchaser!=null}"><span class="step">3</span>买家信息<span class="chevron"></span></li>
+                <li th:if="${order.offer!=null}"><span class="step">4</span>卖家信息<span class="chevron"></span></li>
+                <li><span class="step">5</span>支付信息<span class="chevron"></span></li>
+                <li><span class="step">6</span>物流信息<span class="chevron"></span></li>
+                <!--
+                <li><span class="step">7</span>仓储信息<span class="chevron"></span></li>
+                <li><span class="step">8</span>鉴定信息<span class="chevron"></span></li>
+                -->
+            </ul>
+            <div class="clear"></div>
+        </div>
+        <div class="warrant_main">
+            <div class="tree_left" style="display: block">
+                <div class="tail-main" style="display: block">
+                    <div class="top table2_top">
+                        <div class="top_out">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>订单编号</td>
+                                    <td><input type="text" th:value="${order.orderCode}" disabled></td>
+                                    <td>订单类型</td>
+                                    <td>
+                                        <input type="text" th:if="${order.orderType=='buy'}" value="购买" disabled>
+                                        <input type="text" th:if="${order.orderType=='sell'}" value="出售" disabled>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>下单时间</td>
+                                    <td><input type="text" th:value="${#dates.format(order.orderTime,'yyyy-MM-dd HH:mm:ss')}" disabled></td>
+                                    <td>成交价格</td>
+                                    <td><input type="text" th:value="${order.commondityPrice}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>交易费(9.5%)<span></span></td>
+                                    <td><input type="text" th:value="${order.commondityPrice*0.095}"  disabled></td>
+                                    <td>手续费(3%)<span></span></td>
+                                    <td><input type="text" th:value="${order.commondityPrice*0.03}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>买手物流费<span></span></td>
+                                    <td><input type="text" value="20"  disabled></td>
+                                    <td>鉴定费<span></span></td>
+                                    <td><input type="text" value="0" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>是否自提</td>
+                                    <td>
+                                        <input type="text" th:if="${order.selfPickup==1}" value="是" disabled>
+                                        <input type="text" th:if="${order.selfPickup==0}" value="否" disabled>
+                                    </td>
+                                    <td>订单进度</td>
+                                    <td>
+                                        <input type="text" th:if="${order.progress=='0'}" value="订单待确认" disabled>
+                                        <input type="text" th:if="${order.progress=='1'}" value="订单生效" disabled>
+                                        <input type="text" th:if="${order.progress=='2'}" value="卖家备货中" disabled>
+                                        <input type="text" th:if="${order.progress=='3'}" value="卖家物流到平台" disabled>
+                                        <input type="text" th:if="${order.progress=='4'}" value="平台收货" disabled>
+                                        <input type="text" th:if="${order.progress=='5'}" value="平台验货" disabled>
+                                        <input type="text" th:if="${order.progress=='6'}" value="平台物流给买家" disabled>
+                                        <input type="text" th:if="${order.progress=='7'}" value="买家收货" disabled>
+                                        <input type="text" th:if="${order.progress=='8'}" value="订单完成" disabled>
+                                        <input type="text" th:if="${order.progress=='-2'}" value="买家退货给平台" disabled>
+                                        <input type="text" th:if="${order.progress=='-1'}" value="平台退货给卖家" disabled>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tree_left">
+                <div class="tail-main" style="display: block">
+                    <div class="top table2_top">
+                        <div class="top_out">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>商品名称</td>
+                                    <td><input type="text" th:value="${order.commodity.commodityName}" disabled></td>
+                                    <td>商品规格</td>
+                                    <td><input type="text" th:value="${order.sizeName}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>品牌</td>
+                                    <td><input type="text" th:value="${order.commodity.brandName}" disabled></td>
+                                    <td>颜色</td>
+                                    <td><input type="text" th:value="${order.commodity.color}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>商品图片</td>
+                                    <td colspan="8" style="text-align: left">
+                                        <img class="reportImg noImg" th:each="pic:${order.commodity.picArray}" th:if="${pic}!=''" th:attr="src=@{${http}+${pic}}">
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tree_left" th:if="${order.purchaser!=null}">
+                <div class="tail-main" style="display: block">
+                    <div class="top table2_top">
+                        <div class="top_out">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>姓名<span></span></td>
+                                    <td><input type="text" th:value="@{${order.purchaser.firstName}+${order.purchaser.lastName}}"  disabled></td>
+                                    <td>电话号码<span></span></td>
+                                    <td><input type="text" th:value="${order.bAddress.phoneNumber}"  disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>邮编<span></span></td>
+                                    <td><input type="text" th:value="${order.bAddress.postalCode}"  disabled></td>
+                                    <td>收货地址<span></span></td>
+                                    <td><input type="text" th:value="${order.bAddress.address}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>物流费<span></span></td>
+                                    <td><input type="text" value="20"  disabled></td>
+                                    <td>鉴定费<span></span></td>
+                                    <td><input type="text" value="0" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>应付款<span>*</span></td>
+                                    <td><input type="text" th:value="${order.commondityPrice+20}" disabled></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tree_left" th:if="${order.offer!=null}">
+                <div class="tail-main" style="display: block">
+                    <div class="top table2_top">
+                        <div class="top_out">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <td>姓名<span></span></td>
+                                    <td><input type="text" th:value="@{${order.offer.firstName}+${order.offer.lastName}}"  disabled></td>
+                                    <td>电话号码<span></span></td>
+                                    <td><input type="text" th:value="${order.sAddress.phoneNumber}"  disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>邮编<span></span></td>
+                                    <td><input type="text" th:value="${order.sAddress.postalCode}"  disabled></td>
+                                    <td>发货地址<span></span></td>
+                                    <td><input type="text" th:value="${order.sAddress.address}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>交易费(9.5%)<span></span></td>
+                                    <td><input type="text" th:value="${order.commondityPrice*0.095}"  disabled></td>
+                                    <td>手续费(3%)<span></span></td>
+                                    <td><input type="text" th:value="${order.commondityPrice*0.03}" disabled></td>
+                                </tr>
+                                <tr>
+                                    <td>物流费<span></span></td>
+                                    <td><input type="text" value="0"  disabled></td>
+                                    <td>应收款<span>*</span></td>
+                                    <td><input type="text" th:value="${order.commondityPrice-order.commondityPrice*0.095-order.commondityPrice*0.03}" disabled></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tree_left"></div>
+            <div class="tree_left"></div>
+            <div class="tree_left"></div>
+            <div class="tree_left"></div>
+        </div>
+    </div>
+</div>
+<div class="notice_bot">
+    <div class="r_right but_p">
+        <button class="but_save addCountNumber" style="display: none">上一步</button>
+        <button class="but_save delCount">下一步</button>
+        <button class="but_close">关闭</button>
+    </div>
+</div>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script src="../../../plugin/laydate/laydate.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".event_list").css("height",document.documentElement.clientHeight-80);
+        //加载案件流程
+        loadOrderFlow($("input[name='orderCode']").val());
+
+        ///////////////////////标签切换//////////////////////////////////
+        $(".warrant_nav ul li").each(function(index){
+            $(this).click(function(){
+                countNumber = index;
+                $(".warrant_nav ul li").removeClass("warrant_active");
+                $(this).addClass("warrant_active");
+                $(".warrant_main .tree_left").eq(index).show().siblings(".tree_left").stop().hide();
+                if(index == 0){
+                    $(".saveCount").hide();
+                    $(".addCountNumber").hide();
+                    $(".delCount").show();
+                }else if(index == 3){
+                    $(".delCount").hide();
+                    $(".saveCount").show();
+                    $(".addCountNumber").show();
+                }else{
+                    $(".saveCount").hide().siblings("button").show()
+                }
+            })
+        });
+        ///////////////////////上一步////////////////////////////////////
+        $(".addCountNumber").on("click",function () {
+            if(countNumber <= 1){
+                countNumber = 0;
+                $(".addCountNumber").hide().siblings("button").show();
+            }else{
+                countNumber--;
+                $(".delCount").show();
+            }
+            $(".saveCount").hide();
+            $(".warrant_nav ul li").eq(countNumber).addClass("warrant_active").siblings("li").removeClass("warrant_active");
+            $(".warrant_main .tree_left").eq(countNumber).show().siblings(".tree_left").stop().hide();
+        });
+        ///////////////////////下一步////////////////////////////////////
+        $(".delCount").on("click",function () {
+            if(countNumber >= 2){
+                countNumber = 3;
+                $(".delCount").hide().siblings("button").show();
+            }else{
+                countNumber++;
+                $(".addCountNumber").show()
+            }
+            $(".warrant_nav ul li").eq(countNumber).addClass("warrant_active").siblings("li").removeClass("warrant_active");
+            $(".warrant_main .tree_left").eq(countNumber).show().siblings(".tree_left").stop().hide();
+        });
+        ///////////////////////关闭//////////////////////////////////////
+        $(".but_close").on("click",function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+
+    /**
+     * 加载订单流程信息
+     * @param orderCode
+     */
+    function loadOrderFlow(orderCode){
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: "/order/getOrderFlow.shtm",
+            data: {orderCode:orderCode},
+            success: function (flows) {
+                $(".event_list").html("");
+                for(var i=0;i<flows.length;i++){
+                    var flow = flows[i];
+                    var operatorName = "";
+                    if(flow.operatorType==0){operatorName=flow.optUser.userName}
+                    else if(flow.operatorType==1){operatorName=flow.optAccount.firstName + flow.optAccount.lastName }
+                    var div = '<div><li><span>'+new Date(flow.flowTime).Format("MM月dd日 hh:mm:ss")+'</span><p><span><a>'+operatorName+'</a><a class="process">'+flow.flowName+'</a></span></p></li></div>';
+                    $(".event_list").prepend(div);
+                }
+            }
+        });
+    }
+
+    // 对Date的扩展，将 Date 转化为指定格式的String
+    // 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符，
+    // 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字)
+    // 例子：
+    // (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423
+    // (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18
+    Date.prototype.Format = function (fmt) { //author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, //月份
+            "d+": this.getDate(), //日
+            "h+": this.getHours(), //小时
+            "m+": this.getMinutes(), //分
+            "s+": this.getSeconds(), //秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+            "S": this.getMilliseconds() //毫秒
+        };
+        if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+    <meta charset="utf-8">
+    <title>新增用户</title>
+    <head>
+        <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+        <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+        <link href="../../../css/tail.css" rel="stylesheet" type="text/css">
+    </head>
+<body>
+<div class="main">
+    <div class="tail-nav l_left">
+        <div class="nav-img"><img src="../../../img/header.png" width="198" height="250"/></div>
+        <ul><li class="nav_active">上传图片</li></ul>
+        <div class="clear"></div>
+    </div>
+    <div class="content">
+        <!--基本信息-->
+        <h6>用户基本信息</h6>
+        <div class="tail-main" style="display: block">
+            <form id="userForm" target="submitFrame">
+                <input type="hidden" name="userId">
+                <div class="top table2_top">
+                    <div class="top_out">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td>用户名称<span>*</span></td>
+                                    <td><input type="text" name="userName"></td>
+                                    <td>角色<span>*</span></td>
+                                    <td>
+                                        <select id="role" name="roleId"></select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>登录名</td>
+                                    <td><input type="text" name="loginName"></td>
+                                    <td>邮箱地址</td>
+                                    <td><input type="text" name="email"></td>
+                                </tr>
+                                <tr>
+                                    <td>电话号码</td>
+                                    <td><input type="text" name="tel"></td>
+                                    <td>证件号码</td>
+                                    <td><input type="text" name="IDNumber"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="notice_bot">
+    <div class="r_right but_p">
+        <button class="but_save">完成</button>
+        <button class="but_close">关闭</button>
+    </div>
+</div>
+<iframe id="submitFrame" style="display: none;width:0; height:0" name="submitFrame"  src="about:blank"></iframe>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //加载角色列表
+        loadRoleList();
+        //保存
+        $(".but_save").on("click",function () {
+            $.ajax({
+                type: "POST",
+                dataType: "json",
+                url: "/sys/user/addOrUpdate.shtm",
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                data: $("#userForm").serialize(),
+                success: function (result) {
+                    parent.layer.msg(result.msg);
+                    if(result.code == 200){
+                        $("input[name='userId']").val(result.user.userId);
+                        parent.$("#table1").bootstrapTable('refresh');
+                        if($(".notice_bot").find("input[type='checkbox']")[0].checked){
+                            $(".but_close").click();
+                        }
+                    }
+                }
+            });
+        });
+        //关闭按钮
+        $(".but_close").on("click",function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+
+    /**
+     * 加载角色列表
+     */
+    function loadRoleList(){
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "/sys/role/getRoleList.shtm",
+            success: function (list) {
+                $.each(list, function (i) {
+                    var obj = list[i];
+                    var opt = '<option value="'+obj.roleId+'">'+obj.roleName+'</option>';
+                    $("select[name='roleId']").append(opt);
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

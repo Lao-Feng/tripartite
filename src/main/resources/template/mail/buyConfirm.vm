@@ -1,0 +1,9 @@
+﻿<html>
+<head></head>
+<body>
+    <h1>您好!你在Alleyoop上选购的商品有卖家出售,确认购买请点击链接</h1>
+    <h3><a th:text="${buyUrl}" th:attr="href=@{${buyUrl}}"></a></h3>
+    <h1>取消购买请点击链接</h1>
+    <h3><a th:text="${notBuyUrl}" th:attr="href=@{${notBuyUrl}}"></a></h3>
+</body>
+</html>

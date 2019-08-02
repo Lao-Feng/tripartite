@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品品牌管理</title>
+    <link href="../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../css/brand.css" rel="stylesheet" type="text/css">
+    <script src="../../js/jquery-2.2.0.min.js"></script>
+    <script src="../../plugin/bstable/js/bootstrap.min.js"></script>
+    <script src="../../plugin/bstable/js/bootstrap-table.js"></script>
+    <script src="../../plugin/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../../plugin/layer_v2.1/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            table()
+        });
+        function table(){
+            $('#table').bootstrapTable({
+                method: "get",
+                url: "json/work.json",
+                striped: true,
+                singleSelect: false,
+                dataType: "json",
+                pagination: true, //分页
+                pageSize: 8,
+                pageNumber: 1,
+                search: false, //显示搜索框
+                contentType: "application/x-www-form-urlencoded",
+                queryParams: false,
+                columns: [
+
+                    {
+                        checkbox: "true",
+                        field: 'check',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '作业名称',
+                        field: 'name',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '作业车辆',
+                        field: 'id',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '作业类型',
+                        field: 'name',
+                        align: 'center',
+                        valign: 'middle'
+                    },
+                    {
+                        title: '作业线路',
+                        field: 'line',
+                        align: 'center'
+                    },
+                    {
+                        title: '作业日期',
+                        field: 'time',
+                        align: 'center'
+                    },
+                    {
+                        title: '作业内容',
+                        field: 'person',
+                        align: 'center'
+                    },
+                    {
+                        title: '操作',
+                        field: '',
+                        align: 'center',
+                        formatter: function (value, row) {
+                            var  e = '<button  class="btn btn-success btn-xs" id="add" data-id="98"  onclick="add(\'' + row.id + '\')">查看详情</button> ';
+                            var  c = '<button  class="btn btn-danger btn-xs"  id="add" data-id="98" onclick="del(\'' + row.id + '\')">删除</button> ';
+                            return e+c;
+                        }
+                    }
+                ]
+            });
+        }
+        function addWork() {
+            layer.open({
+                type: 2,
+                title: '环卫车辆排班',
+                shade: 0.5,
+                skin: 'layui-layer-rim',
+                area: ['80%', '540px'],
+                shadeClose: true,
+                closeBtn: 1,
+                content: 'carWorkTail.html'
+            });
+        }
+    </script>
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+<div class="mould-main">
+    <div class="mould-top">
+        <p>商品品牌管理</p>
+    </div>
+    <div class="mould-middle">
+        <div class="mould-content">
+            <div class="mould-search">
+                <div class="mould-items">
+                    <div class="mould-item">
+                        <div class="item-text">
+                            品牌名称
+                        </div>
+                        <div class="item-input">
+                            <input type="text"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="mould-btn">
+                <div class="btn-item">查询</div>
+                <div class="btn-item" onclick="addWork()">新增</div>
+                <div class="btn-item">删除</div>
+                <div class="btn-item">编辑</div>
+            </div>
+            <table id="table" class="table_style" style="margin: 0 auto"></table>
+        </div>
+    </div>
+    <div class="mould-bottom">
+        <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+﻿<html>
+<head></head>
+<body>
+    <h1>您好!你在Alleyoop上出售的商品有买家下单购买,</h1>
+    <span>请将出售商品寄到如下地址进行验货</span><br>
+    <span>地址:</span><span th:text="${receivingAddress}"></span><br>
+    <span>邮编:</span><span th:text="${postCodes}"></span><br>
+    <span>收件人:</span><span th:text="${receivingMan}"></span><br>
+    <span>联系电话:</span><span th:text="${phoneNumber}"></span><br>
+</body>
+</html>

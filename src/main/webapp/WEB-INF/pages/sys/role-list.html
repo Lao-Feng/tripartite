@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>权限管理</title>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/user.css" rel="stylesheet" type="text/css">
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+<div class="mould-main">
+    <div class="mould-top">
+        <p>授权管理是对系统角色进行自定义配置管理。</p>
+    </div>
+    <div class="mould-middle">
+        <div class="mould-content">
+            <div class="mould-search">
+                <div class="mould-items">
+                    <div class="mould-item">
+                        <div class="item-text">
+                            角色名称
+                        </div>
+                        <div class="item-input">
+                            <input type="text" id="roleName"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="mould-btn">
+                <div class="btn-item btn-query">查询</div>
+                <div class="btn-item btn-add">新增</div>
+                <div class="btn-item btn-batchDelete">删除</div>
+                <div class="btn-item btn-edit">编辑</div>
+                <div class="btn-item btn-warrant">角色授权</div>
+            </div>
+            <table id="table" class="table_style" style="margin: 0 auto"></table>
+        </div>
+    </div>
+    <div class="mould-bottom">
+        <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+    </div>
+</div>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //查询按钮
+        $(".btn-query").on("click",function () {
+            $("#table").bootstrapTable('refresh');
+        });
+        //新增角色
+        $(".btn-add").on("click",function(){
+            layer.open({
+                type: 2,
+                title: '新增角色',
+                shade: 0.5,
+                skin: 'layui-layer-rim',
+                closeBtn:1,
+                area: ['500px', '320px'],
+                content: '/page/sys/role-add.shtm'
+            });
+        });
+        //修改角色
+        $(".btn-edit").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var roleId = selections[0].roleId;
+                layer.open({
+                    type: 2,
+                    title: '角色修改',
+                    shade: 0.5,
+                    skin: 'layui-layer-rim',
+                    closeBtn:1,
+                    area: ['500px', '320px'],
+                    content: '/page/sys/role-update.shtm?roleId='+roleId
+                });
+            }
+        });
+        //批量删除
+        $(".btn-batchDelete").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var arry=[];
+                $.each(selections,function (index,row) {
+                    arry.push(row.roleId);
+                });
+                layer.confirm('是否确定删除?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url:'/sys/role/batchDelete.shtm',
+                        type:'POST',
+                        dataType:"json",
+                        data:JSON.stringify({ids:arry.join(",")}),
+                        contentType: "application/json; charset=utf-8",
+                        success:function (result) {
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        //角色授权
+        $(".btn-warrant").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var roleId = selections[0].roleId;
+                layer.open({
+                    type: 2,
+                    title: '角色授权',
+                    shadeClose: false,
+                    shade: 0.5,
+                    skin: 'layui-layer-rim',
+                    closeBtn:1,
+                    area: ['630px', '400px'],
+                    content: '/page/sys/role-warrant.shtm?roleId='+roleId
+                });
+            }
+        });
+        //加载角色列表
+        loadRoleList();
+    });
+
+    /**
+     * 加载角色列表
+     */
+    function loadRoleList(){
+        $('#table').bootstrapTable({
+            method: "post",
+            striped: false,
+            singleSelect: false,
+            url: "/sys/role/list.shtm",
+            dataType: "json",
+            pagination: true, //分页
+            pageSize: 10,
+            pageNumber: 1,
+            search: false, //显示搜索框
+            contentType: "application/x-www-form-urlencoded",
+            sidePagination: "server", //服务端请求
+            clickToSelect : true, //是否启用点击选中行
+            queryParams:function(params) {
+                return {
+                    pageNum: params.offset/params.limit+1,
+                    pageSize: params.limit,//页码大小
+                    roleName:$("#roleName").val()
+                };
+            },
+            //返回数据格式处理
+            responseHandler: function(res) {
+                return {
+                    "total": res.data.total,//总页数
+                    "rows": res.data.list   //数据
+                };
+            },
+            onDblClickRow: function (row) {},
+            columns: [
+                {
+                    checkbox: "true",
+                    field: 'check',
+                    align: 'center'
+                }
+                ,
+                {
+                    title: "角色编号",
+                    field: 'roleId',
+                    align: 'center'
+                },
+                {
+                    title: '角色名称',
+                    field: 'roleName',
+                    align: 'center'
+                },
+                {
+                    title: '角色描述',
+                    field: 'decription',
+                    align: 'center'
+                }
+                /*
+                ,{
+                    title: '操作',
+                    field: 'roleId',
+                    width: '180px',
+                    align: 'center',
+                    formatter:function(val,row){
+                        var b='<a href="javascript:void(0)" class="btn btn-xs btn-primary" onclick="grantRole('+val+')">授权</a>';
+                        var a='<a href="javascript:void(0)" class="btn btn-xs btn-success" onclick="updateRole('+val+')">修改</a>';
+                        var e='<a href="javascript:void(0)"  class="btn btn-xs btn-danger" onclick="deleteRole('+val+')">删除</a>';
+                        return b+a+e;
+                    }
+                }
+                */
+            ]
+        });
+    }
+</script>
+</body>
+</html>

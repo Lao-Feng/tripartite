@@ -1,0 +1,26 @@
+﻿ul{list-style: none;padding: 0}
+.content-tabs button{background-color: transparent !important;color: #fff !important;}
+.content-tabs button i{color: #fff !important}
+.menuItemActive{background: url(../img/li-bg-active.png) no-repeat !important;color: #1164b8 !important;background-size: 100% 100% !important;}
+.menuItemActive i{color: #1164b8 !important}
+.main-header .sidebar-toggle{margin-left: -10px;padding: 0 15px;font-size: 24px}
+/*.treeview span{background-color: #222d32 !important;}*/
+.treeview-menu li{transition:all 0.5s}
+.title-bg{width: 100%;height: 140px;background:url("../img/title-bg.png") no-repeat;position: fixed;top: 0;left: 0;background-size: 100% 100%}
+.user-info{height: 40px;width: 100%;background: url(../img/user-info.png) no-repeat;background-position: 100% 100%}
+.user-info span{float: left  ;line-height: 40px}
+.personIcon{display:inline-block;width: 18px;height: 22px;background-image: url(../img/personIcon.png);margin: 8px 4px 0 18px}
+.page-tabs-content a{background: url(../img/ccccc.png) no-repeat !important;background-size: 100% 100% !important; }
+.tabs-ul{display: inline-block;position: absolute;left: 430px;top: 0}
+.tabs-ul li{float:left;width: 120px;height: 100px;background:url(../img/aaaa.png) no-repeat;text-align: center;display: table-cell;padding-top:10px;margin-right: 8px;cursor: pointer;color: #fff;font-weight: bold}
+.tabs-ul li.tabs-ul-active{background:url(../img/bbbb.png) no-repeat}
+.tabs-btn{float: right;margin-top: 20px}
+
+.tabs-btn ul li{display: inline-block;padding: 0 14px;line-height: 12px;cursor: pointer}
+.tabs-btn ul li:first-child{border-right: 1px #225889 solid}
+.tabs-btn ul li .glyphicon{margin-right: 2px;display: inline-block}
+.tabs-btn1{float: right;margin-top: 10px;}
+.tabs-btn1 p{line-height: 20px;text-align: center;padding: 0;margin: 4px 0 0 0}
+.tabs-btn1 ul li {display: inline-block;padding: 0 14px;line-height: 12px;cursor: pointer}
+.sos img{width: 56px;height: 56px;border-radius: 50%;margin: 0 auto;display: block}
+.tabs-btn1 p span{color: #ff416b;margin-left: 6px;font-weight: bold}

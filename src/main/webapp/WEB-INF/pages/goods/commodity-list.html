@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品品牌管理</title>
+    <link href="../../../plugin/bstable/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../plugin/bstable/css/bootstrap-table.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/brand.css" rel="stylesheet" type="text/css">
+</head>
+<body style="font-family: 微软雅黑;color: #475059;min-width: 1150px;overflow: auto">
+<div class="mould-main">
+    <div class="mould-top">
+        <p>商品信息管理界面主要对商品进行新增、查询、修改等操作。</p>
+    </div>
+    <div class="mould-middle">
+        <div class="mould-content">
+            <div class="mould-search">
+                <div class="mould-items">
+                    <div class="mould-item">
+                        <div class="item-text"> 类别</div>
+                        <div class="item-input">
+                            <select id="CategoryCode">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mould-item">
+                        <div class="item-text">商品名称</div>
+                        <div class="item-input">
+                            <input type="text" id="CommodityName"/>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+            <div class="mould-btn">
+                <div class="btn-item btn-query">查询</div>
+                <div class="btn-item btn-add">新增</div>
+                <div class="btn-item btn-batchDelete">删除</div>
+                <div class="btn-item btn-edit">编辑</div>
+                <div class="btn-item btn-adv">广告推广</div>
+            </div>
+            <table id="table" class="table table_style table-bordered table-hover" style="margin: 0 auto"></table>
+        </div>
+    </div>
+    <div class="mould-bottom">
+        <p>Copyright©2013-2018 沪IPC备11000002000001号</p>
+    </div>
+</div>
+<script src="../../../js/jquery-2.2.0.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap.min.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table.js"></script>
+<script src="../../../plugin/bstable/js/bootstrap-table-zh-CN.min.js"></script>
+<script src="../../../plugin/layer_v2.1/layer/layer.js"></script>
+<script type="text/javascript">
+    $(function () {
+        //加载商品类别
+        loadCategoryList();
+        //加载商品列表
+        loadCommodityList();
+
+        //查询
+        $(".btn-query").on("click",function () {
+            $("#table").bootstrapTable('refresh');
+        });
+        //新增商品
+        $(".btn-add").on("click",function () {
+            layer.open({
+                type: 2,
+                title: '商品登记',
+                shade: 0.5,
+                skin: 'layui-layer-rim',
+                closeBtn:1,
+                area: ['960px', '440px'],
+                content: '/page/goods/commodity-add.shtm'
+            });
+        });
+        //编辑商品
+        $(".btn-edit").on("click",function(){
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var commondityCode = selections[0].commondityCode;
+                layer.open({
+                    type: 2,
+                    title: '商品修改',
+                    shade: 0.5,
+                    skin: 'layui-layer-rim',
+                    closeBtn:1,
+                    area: ['960px', '440px'],
+                    content: '/page/goods/commodity-update.shtm?commondityCode='+commondityCode
+                });
+            }
+        });
+        //删除
+        $(".btn-batchDelete").on("click",function(){
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var arry=[];
+                $.each(selections,function (index,row) {
+                    arry.push(row.commondityCode);
+                });
+                layer.confirm('是否确定删除?', {
+                    title: '提示',
+                    btn: ['确定', '取消'] //按钮
+                }, function (index) {
+                    $.ajax({
+                        url:'/commodity/batchDelete.shtm',
+                        type:'POST',
+                        dataType:"json",
+                        data:JSON.stringify({ids:arry.join(",")}),
+                        contentType: "application/json; charset=utf-8",
+                        success:function (result) {
+                            layer.msg(result.msg);
+                            $("#table").bootstrapTable('refresh');
+                        }
+                    });
+                }, function (index) {
+                    layer.close(index);
+                });
+            }
+        });
+        //广告推广
+        $(".btn-adv").on("click",function () {
+            var selections = $("#table").bootstrapTable('getSelections');
+            if(selections.length == 0 || selections.length > 1){
+                layer.msg("请选择一条数据进行操作");
+                return;
+            }else{
+                var commondityCode = selections[0].commondityCode;
+                layer.open({
+                    type: 2,
+                    title: '商品推广',
+                    shade: 0.5,
+                    skin: 'layui-layer-rim',
+                    closeBtn:1,
+                    area: ['500px', '320px'],
+                    content: '/page/goods/commodity-adv.shtm?commondityCode='+commondityCode
+                });
+            }
+        });
+    });
+    /**
+     * 加载商品类别
+     */
+    function loadCategoryList(){
+        $.ajax({
+            type: "get",
+            dataType: "json",
+            url: "/dic/getCategoryList.shtm",
+            success: function (list) {
+                $.each(list, function (i) {
+                    var obj = list[i];
+                    var opt = '<option value="'+obj.categoryCode+'">'+obj.categoryName+'</option>';
+                    $("#CategoryCode").append(opt);
+                });
+            }
+        });
+    }
+    /**
+     * 加载商品列表
+     */
+    function loadCommodityList(){
+        $('#table').bootstrapTable({
+            method: "post",
+            striped: false,
+            singleSelect: false,
+            url: "/commodity/list.shtm",
+            dataType: "json",
+            pagination: true, //分页
+            pageSize: 10,
+            pageNumber: 1,
+            search: false, //显示搜索框
+            contentType: "application/x-www-form-urlencoded",
+            sidePagination: "server", //服务端请求
+            clickToSelect : true, //是否启用点击选中行
+            queryParams:function(params) {
+                return {
+                    pageNum: params.offset/params.limit+1,
+                    pageSize: params.limit,//页码大小
+                    categoryCode:$("#CategoryCode").val(),
+                    commodityName:$("#CommodityName").val()
+                };
+            },
+            responseHandler: function(res) {
+                return {
+                    "total": res.data.total,//总页数
+                    "rows": res.data.list   //数据
+                };
+            },
+            onDblClickRow: function (row) {},
+            columns: [
+                {
+                    checkbox: "true",
+                    field: 'check',
+                    align: 'center'
+                },
+                {
+                    title: "编号",
+                    field: 'commondityCode',
+                    align: 'center'
+                },
+                {
+                    title: "类别",
+                    field: 'category.categoryName',
+                    align: 'center'
+                },
+                {
+                    title: "商品名称",
+                    field: 'commodityName',
+                    align: 'center'
+                },
+                {
+                    title: "品牌名称",
+                    field: 'brandName',
+                    align: 'center'
+                },
+                {
+                    title: "图片",
+                    field: "picUrlArray",
+                    //将图片url格式化，展示为缩略图形式
+                    formatter: function (val,row) {
+                        if(val!=null){
+                            return '<img src="'+val[0]+'" style="height: 30px;cursor: pointer;" alt="图片丢失了">'
+                        }
+                    }
+                },
+                {
+                    title: '修改时间',
+                    field: 'modifyTime',
+                    align: 'center'
+                },
+                {
+                    title: '修改人',
+                    field: 'modifier.userName',
+                    align: 'center'
+                }
+            ]
+        });
+    }
+</script>
+</body>
+</html>
